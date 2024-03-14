@@ -7,6 +7,8 @@
 
 int codeOffset = 0; 
 int dataOffset = 0;
+struct code co;
+struct data dat;
 
 struct label {
     int memoryAddress;
@@ -39,7 +41,7 @@ struct data {
     double dou;
 };
 
-void resetData(struct data dat) {
+void resetData() {
     strcpy(dat.type, "");
     dat.byte = 0;
     dat.shor = 0;
@@ -49,7 +51,7 @@ void resetData(struct data dat) {
     dat.dou = 0;
 }
 
-void resetInstr(struct code co) {
+void resetInstr() {
     strcpy(co.type, "");
     co.byte = 0;
     co.shor = 0;
@@ -60,7 +62,7 @@ void resetInstr(struct code co) {
     strcpy(co.lab, "");
 }
 
-bool checkData(struct data dat, char str[], int offset) {
+bool checkData(char str[]) {
     if(strcmp(dat.type, "byte") == 0) {
         int64_t foo = atoll(str);
         if(foo >= INT8_MIN && foo <= INT8_MAX) {
@@ -151,19 +153,19 @@ int duplicateExists(struct label labelArray[], char* str, int size) {
     return 0;
 }
 
-bool checkCode(struct code co, char token[], int offset) {
-    printf("token: %s, co.type: %s, offset: %d\n", token, co.type, offset);
+bool checkCode(char token[]) {
+    //printf("token: %s, co.type: %s, offset: %d\n", token, co.type, offset);
     //8
     if(strcmp(co.type, "byte") == 0) {
         int64_t foo = atoll(token);
         if(foo >= INT8_MIN && foo <= INT8_MAX) {
-            printf("here\n");
             co.byte = (int8_t) foo;
+            // printf("co.byte: %d\n", co.byte);
             codeOffset += 2;
             return true;
         }
         else { 
-            printf("here?\n");
+            //printf("here?\n");
             return false;
         }
     }
@@ -253,7 +255,7 @@ bool getOperand(struct code co, char str[], int offset) {
     int index = 0;
     while (sscanf(str + offs, "%s", token) == 1) {
         if(index == 1) {
-            return checkCode(co, token, offset);
+            return checkCode(token);
         }
         index++;
         offs += strlen(token) + 1; 
@@ -261,11 +263,6 @@ bool getOperand(struct code co, char str[], int offset) {
 }
 
 int main(int argc, char** argv) {
-    //addresses are 24 bit (unsigned, BIG ENDIAN) or operations with labels
-    //first 4 bytes of slko are offset of .code, second 4 bytes are offset of .data section (8+P)
-    //next P bytes are instructions, Q bytes after that are the .data sections (which should always have a type)
-    //passes: count labels, memory address and duplicate checking, validate with regex, 
-
     char fileName[strlen(argv[1]) + 3];
     strcpy(fileName, argv[1]);
     if(fileName[strlen(fileName) - 3] != 's' || fileName[strlen(fileName) - 2] != 'l' || fileName[strlen(fileName) - 1] != 'k') {
@@ -600,7 +597,7 @@ int main(int argc, char** argv) {
         //.double 152
         "^.double\n$",
         //any other number data type 153
-        "\t[0-9]+\\.?[0-9]\n$",
+        "^\t\\d*\\.?\\d*\n$",
         //ascii data type 154
         "^\t[a-zA-Z]\n$"
     };
@@ -713,9 +710,6 @@ int main(int argc, char** argv) {
                 //printf("value: %d opcode: %d\n", value, opcode);
             }
 
-            //creating a struct based on instruction type
-            struct code co;
-            struct data dat;
             char typ[7]; //to hold type of data
             
 
@@ -762,13 +756,13 @@ int main(int argc, char** argv) {
 
                     strcpy(dat.type, typ);
                     //confirming that it is formatted correctly
-                    if(!checkData(dat, str, dataOffset)) {
+                    if(!checkData(str)) {
                         fprintf(stderr, "3Error on line %d\n", lineNum);
                         exit(1);
                     }
                     dataArray[datIndex] = dat; //assign to array (with initialized data type)
                     datIndex++;
-                    resetData(dat); //reset struct
+                    //resetData(dat); //reset struct
                     break;
                 //handling ascii
                 case 154: 
@@ -780,20 +774,20 @@ int main(int argc, char** argv) {
 
                     strcpy(dat.type, typ);
                     //confirming formatting
-                    if(!checkData(dat, str, dataOffset)) {
+                    if(!checkData(str)) {
                         fprintf(stderr, "5Error on line %d\n", lineNum);
                         exit(1);
                     }
                     dataArray[datIndex] = dat; //assign to array
                     datIndex++;
-                    resetData(dat); //reset struct
+                    //resetData(dat); //reset struct
                     break;
 
 
                 //instructions of various sizes
                 //8 bit
                 case 0: case 123: case 124: case 125: case 126: case 127: case 128: case 129: case 130: case 132: 
-                    //TODO technically jrpcs should be unsigned i think so uh that needs to be moved
+                    //TODO jrpcs should be signed so check whether it needs to move
                     strcpy(co.type, "byte");
                     if(!getOperand(co, str, codeOffset)) {
                         fprintf(stderr, "6Error on line %d\n", lineNum);
@@ -801,7 +795,7 @@ int main(int argc, char** argv) {
                     }
                     co.opcode = opcode; 
                     instrArray[codeIndex] = co;
-                    resetInstr(co);
+                    //resetInstr();
                     codeIndex++;
                     //codeOffset += 2; //1 byte + 1 byte
                     break;
@@ -814,7 +808,7 @@ int main(int argc, char** argv) {
                     }
                     co.opcode = opcode;
                     instrArray[codeIndex] = co;
-                    resetInstr(co);
+                    //resetInstr();
                     codeIndex++;
                     //codeOffset += 3; //1 + 2 bytes
                     break;
@@ -844,7 +838,7 @@ int main(int argc, char** argv) {
                     }
                     co.opcode = opcode;
                     instrArray[codeIndex] = co;
-                    resetInstr(co);
+                    //resetInstr();
                     codeIndex++;
                     break;
                     //codeOffset += 4; //1 + 3 
@@ -857,7 +851,7 @@ int main(int argc, char** argv) {
                     }
                     co.opcode = opcode;
                     instrArray[codeIndex] = co;
-                    resetInstr(co);
+                    //resetInstr();
                     codeIndex++;
                     //codeOffset += 5; //1 + 4
                     break; 
@@ -870,7 +864,7 @@ int main(int argc, char** argv) {
                     }
                     co.opcode = opcode;
                     instrArray[codeIndex] = co;
-                    resetInstr(co);
+                    //resetInstr();
                     codeIndex++;
                     //codeOffset += 9; //1 + 8
                     break;
@@ -908,7 +902,7 @@ int main(int argc, char** argv) {
                     co.opcode = opcode;
                     codeOffset += 5; //1 + 3 + 1
                     instrArray[codeIndex] = co;
-                    resetInstr(co);
+                    //resetInstr();
                     codeIndex++;
                     break;
                 //no operands
@@ -918,7 +912,7 @@ int main(int argc, char** argv) {
                     codeOffset += 1; //1 byte + 0 operands
                     instrArray[codeIndex] = co;
                     //printf("co.opcode: %d, codeIndex: %d, instrArray[%d].opcode: %d\n", opcode, codeIndex, codeIndex, instrArray[codeIndex].opcode);
-                    resetInstr(co);
+                    //resetInstr();
                     codeIndex++;
                     break;
                 //label
@@ -941,7 +935,7 @@ int main(int argc, char** argv) {
                         exit(1);
                     }
                     instrArray[codeIndex] = co;
-                    resetInstr(co);
+                    //resetInstr();
                     codeIndex++;
                     break;
                 }
@@ -951,8 +945,10 @@ int main(int argc, char** argv) {
                     break;
             }
         } 
-        printf("codeOffset: %d, lineNum: %d\n", codeOffset, lineNum);
+        //printf("codeOffset: %d, lineNum: %d\n", codeOffset, lineNum);
         lineNum++;
+        resetInstr();
+        resetData();
     }
     rewind(file);
 
@@ -1002,7 +998,7 @@ int main(int argc, char** argv) {
     fwrite((const void *)&offse, sizeof(offse), 1, output);
 
     //writing instructions
-    uint8_t op = 0;
+    uint8_t op = 0; 
     for(int i = 0; i < countCode; i++) {
         op = 0;
         op = instrArray[i].opcode;
@@ -1013,34 +1009,77 @@ int main(int argc, char** argv) {
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(instrArray[i].type, "short") == 0) {
-            short toWrite = instrArray[i].shor;
+            short toWrit = instrArray[i].shor;
+            short toWrite = 0;
+            toWrite |= (toWrit >> 8) & 0xFF; 
+            toWrite |= (toWrit << 8) & 0xFF00; 
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(instrArray[i].type, "memory") == 0) {
-            uint32_t toWrite = instrArray[i].mem;
+            uint32_t toWrit = instrArray[i].mem;
+            uint32_t toWrite = 0;
+            toWrite |= (toWrit >> 24) & 0xFF;
+            toWrite |= (toWrit >> 8) & 0xFF00; 
+            toWrite |= (toWrit << 8) & 0xFF0000; 
+            toWrite |= (toWrit << 24) & 0xFF000000;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(instrArray[i].type, "int") == 0) {
-            int toWrite = instrArray[i].ints;
+            int toWrit = instrArray[i].ints;
+            int toWrite = 0;
+            toWrite |= (toWrit >> 24) & 0xFF;
+            toWrite |= (toWrit >> 8) & 0xFF00; 
+            toWrite |= (toWrit << 8) & 0xFF0000; 
+            toWrite |= (toWrit << 24) & 0xFF000000;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(instrArray[i].type, "long") == 0) {
-            long long toWrite = instrArray[i].lon;
+            long long toWrit = instrArray[i].lon;
+            long long toWrite = 0;
+            toWrite |= (toWrit >> 56) & 0xFFLL;
+            toWrite |= (toWrit >> 40) & 0xFF00LL; 
+            toWrite |= (toWrit >> 24) & 0xFF0000LL;
+            toWrite |= (toWrit >> 8) & 0xFF000000LL; 
+            toWrite |= (toWrit << 8) & 0xFF00000000LL;
+            toWrite |= (toWrit << 24) & 0xFF0000000000LL;            
+            toWrite |= (toWrit << 40) & 0xFF000000000000LL; 
+            toWrite |= (toWrit << 56) & 0xFF00000000000000LL;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(instrArray[i].type, "float") == 0) {
-            float toWrite = instrArray[i].flo;
+            int toWrit = 0;
+            memcpy(&toWrit, &instrArray[i].flo, sizeof(float));
+            int toWrite = 0;
+            toWrite |= (toWrit >> 24) & 0xFF;
+            toWrite |= (toWrit >> 8) & 0xFF00; 
+            toWrite |= (toWrit << 8) & 0xFF0000; 
+            toWrite |= (toWrit << 24) & 0xFF000000;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(instrArray[i].type, "double") == 0) {
-            double toWrite = instrArray[i].dou;
+            int64_t toWrit = (uint64_t)instrArray[i].dou;
+            int64_t toWrite = 0;
+            toWrite |= (toWrit & 0xFF) << 56;
+            toWrite |= ((toWrit >> 8) & 0xFF) << 48;
+            toWrite |= ((toWrit >> 16) & 0xFF) << 40;
+            toWrite |= ((toWrit >> 24) & 0xFF) << 32;
+            toWrite |= ((toWrit >> 32) & 0xFF) << 24;
+            toWrite |= ((toWrit >> 40) & 0xFF) << 16;
+            toWrite |= ((toWrit >> 48) & 0xFF) << 8;
+            toWrite |= (toWrit >> 56) & 0xFF;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(instrArray[i].type, "specMem") == 0) {
-            uint32_t toWrite = instrArray[i].mem;
+            uint32_t toWrit = instrArray[i].mem;
+            uint32_t toWrite = 0;
+            toWrite |= (toWrit >> 24) & 0xFF;
+            toWrite |= (toWrit >> 8) & 0xFF00; 
+            toWrite |= (toWrit << 8) & 0xFF0000; 
+            toWrite |= (toWrit << 24) & 0xFF000000;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
-            uint8_t toWrit = instrArray[i].uByte;
-            fwrite((const void *)&toWrit, sizeof(toWrit), 1, output);
+
+            uint8_t toWrit2 = instrArray[i].uByte;
+            fwrite((const void *)&toWrit2, sizeof(toWrit2), 1, output);
         }
         else {
             continue;
@@ -1048,33 +1087,65 @@ int main(int argc, char** argv) {
     }
 
     //writing data
-    for(int i = 0; i < countCode; i++) {
+    for(int i = 0; i < countData; i++) {
         if(strcmp(dataArray[i].type, "byte")) {
             int8_t toWrite = dataArray[i].byte;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
-        else if(strcmp(instrArray[i].type, "ascii") == 0) {
+        else if(strcmp(dataArray[i].type, "ascii") == 0) {
             short toWrite = dataArray[i].byte;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
-        else if(strcmp(instrArray[i].type, "short") == 0) {
-            short toWrite = dataArray[i].shor;
+        else if(strcmp(dataArray[i].type, "short") == 0) {
+            short toWrit = dataArray[i].shor;
+            short toWrite = 0;
+            toWrite |= (toWrit >> 8) & 0xFF; 
+            toWrite |= (toWrit << 8) & 0xFF00; 
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
-        else if(strcmp(instrArray[i].type, "int") == 0) {
-            int toWrite = dataArray[i].ints;
+        else if(strcmp(dataArray[i].type, "int") == 0) {
+            int toWrit = dataArray[i].ints;
+            int toWrite = 0;
+            toWrite |= (toWrit >> 24) & 0xFF;
+            toWrite |= (toWrit >> 8) & 0xFF00; 
+            toWrite |= (toWrit << 8) & 0xFF0000; 
+            toWrite |= (toWrit << 24) & 0xFF000000;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
-        else if(strcmp(instrArray[i].type, "long") == 0) {
-            long long toWrite = dataArray[i].lon;
+        else if(strcmp(dataArray[i].type, "long") == 0) {
+            long long toWrit = dataArray[i].lon;
+            long long toWrite = 0;
+            toWrite |= (toWrit >> 56) & 0xFFLL;
+            toWrite |= (toWrit >> 40) & 0xFF00LL; 
+            toWrite |= (toWrit >> 24) & 0xFF0000LL;
+            toWrite |= (toWrit >> 8) & 0xFF000000LL; 
+            toWrite |= (toWrit << 8) & 0xFF00000000LL;
+            toWrite |= (toWrit << 24) & 0xFF0000000000LL;            
+            toWrite |= (toWrit << 40) & 0xFF000000000000LL; 
+            toWrite |= (toWrit << 56) & 0xFF00000000000000LL;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
-        else if(strcmp(instrArray[i].type, "float") == 0) {
-            float toWrite = dataArray[i].flo;
+        else if(strcmp(dataArray[i].type, "float") == 0) {
+            int toWrit = 0;
+            memcpy(&toWrit, &dataArray[i].flo, sizeof(float));
+            int toWrite = 0;
+            toWrite |= (toWrit >> 24) & 0xFF;
+            toWrite |= (toWrit >> 8) & 0xFF00; 
+            toWrite |= (toWrit << 8) & 0xFF0000; 
+            toWrite |= (toWrit << 24) & 0xFF000000;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
-        else if(strcmp(instrArray[i].type, "double") == 0) {
-            double toWrite = dataArray[i].dou;
+        else if(strcmp(dataArray[i].type, "double") == 0) {
+            int64_t toWrit = (uint64_t)dataArray[i].dou;
+            int64_t toWrite = 0;
+            toWrite |= (toWrit & 0xFF) << 56;
+            toWrite |= ((toWrit >> 8) & 0xFF) << 48;
+            toWrite |= ((toWrit >> 16) & 0xFF) << 40;
+            toWrite |= ((toWrit >> 24) & 0xFF) << 32;
+            toWrite |= ((toWrit >> 32) & 0xFF) << 24;
+            toWrite |= ((toWrit >> 40) & 0xFF) << 16;
+            toWrite |= ((toWrit >> 48) & 0xFF) << 8;
+            toWrite |= (toWrit >> 56) & 0xFF;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
     }
