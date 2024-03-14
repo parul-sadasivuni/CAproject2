@@ -5,6 +5,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+int codeOffset = 0; 
+int dataOffset = 0;
+
 struct label {
     int memoryAddress;
     char* labelName;
@@ -12,12 +15,18 @@ struct label {
 
 struct code {
     char type[7];
+    char label[100];
+    int lineNum;
+    uint8_t opcode;
     int8_t byte;
     short shor;
+    uint32_t mem;
     int ints;
     long long lon;
     float flo;
     double dou;
+    char lab[100];
+    uint8_t uByte;
 };
 
 struct data {
@@ -31,33 +40,34 @@ struct data {
 };
 
 void resetData(struct data dat) {
-    dat.type = NULL;
-    dat.byte = NULL;
-    dat.shor = NULL;
-    dat.ints = NULL;
-    dat.lon = NULL;
-    dat.flo = NULL;
-    dat.dou = NULL;
+    strcpy(dat.type, "");
+    dat.byte = 0;
+    dat.shor = 0;
+    dat.ints = 0;
+    dat.lon = 0;
+    dat.flo = 0.0f;
+    dat.dou = 0;
 }
 
 void resetInstr(struct code co) {
-    co.type = NULL;
-    co.byte = NULL;
-    co.shor = NULL;
-    co.ints = NULL;
-    co.lon = NULL;
-    co.flo = NULL;
-    co.dou = NULL;
+    strcpy(co.type, "");
+    co.byte = 0;
+    co.shor = 0;
+    co.ints = 0;
+    co.lon = 0;
+    co.flo = 0.0f;
+    co.dou = 0;
+    strcpy(co.lab, "");
 }
 
 bool checkData(struct data dat, char str[], int offset) {
     if(strcmp(dat.type, "byte") == 0) {
         int64_t foo = atoll(str);
         if(foo >= INT8_MIN && foo <= INT8_MAX) {
-            int8_t foos = int8_t(foo);
+            int8_t foos = (int8_t)foo;
             dat.byte = foos;
             return true;
-            offset += 1;
+            dataOffset += 1;
         }
         else { 
             return false;
@@ -65,15 +75,16 @@ bool checkData(struct data dat, char str[], int offset) {
     }
     else if(strcmp(dat.type, "ascii") == 0) {
         int8_t foo = str[0];
-        offset += 1;
+        dat.byte = foo;
+        dataOffset += 1;
         return true;
     }
     else if(strcmp(dat.type, "short") == 0) {
         int64_t foo = atoll(str);
         if(foo >= INT16_MIN && foo <= INT16_MAX) {
-            short foos = short(foo);
+            short foos = (short)foo;
             dat.shor = foos;
-            offset += 2;
+            dataOffset += 2;
             return true;
         }
         else { 
@@ -83,9 +94,9 @@ bool checkData(struct data dat, char str[], int offset) {
     else if(strcmp(dat.type, "int") == 0) {
         int64_t foo = atoll(str);
         if(foo >= INT32_MIN && foo <= INT32_MAX) {
-            int foos = int(foo);
+            int foos = (int)foo;
             dat.ints = foos;
-            offset += 4;
+            dataOffset += 4;
             return true;
         }
         else { 
@@ -95,9 +106,9 @@ bool checkData(struct data dat, char str[], int offset) {
     else if(strcmp(dat.type, "long") == 0) {
         int64_t foo = atoll(str);
         if(foo >= INT64_MIN && foo <= INT64_MAX) {
-            short foos = short(foo);
-            dat.shor = foos;
-            offset += 8;
+            long long foos = (long long) foo;
+            dat.lon = foos;
+            dataOffset += 8;
             return true;
         }
         else { 
@@ -108,7 +119,7 @@ bool checkData(struct data dat, char str[], int offset) {
         float foo = atof(str);
         if(foo >= -__FLT_MAX__ && foo <= __FLT_MAX__) {
             dat.flo = foo;
-            offset += 4;
+            dataOffset += 4;
             return true;
         }
         else { 
@@ -119,7 +130,7 @@ bool checkData(struct data dat, char str[], int offset) {
         double foo = atof(str);
         if(foo >= -__DBL_MAX__ && foo <= __DBL_MAX__) {
             dat.dou = foo;
-            offset += 8;
+            dataOffset += 8;
             return true;
         }
         else { 
@@ -140,6 +151,115 @@ int duplicateExists(struct label labelArray[], char* str, int size) {
     return 0;
 }
 
+bool checkCode(struct code co, char token[], int offset) {
+    printf("token: %s, co.type: %s, offset: %d\n", token, co.type, offset);
+    //8
+    if(strcmp(co.type, "byte") == 0) {
+        int64_t foo = atoll(token);
+        if(foo >= INT8_MIN && foo <= INT8_MAX) {
+            printf("here\n");
+            co.byte = (int8_t) foo;
+            codeOffset += 2;
+            return true;
+        }
+        else { 
+            printf("here?\n");
+            return false;
+        }
+    }
+    //16
+    else if(strcmp(co.type, "short") == 0) {
+        int64_t foo = atoll(token);
+        if(foo >= INT16_MIN && foo <= INT16_MAX) {
+            short foos = (short) foo;
+            co.shor = foos;
+            codeOffset += 3;
+            return true;
+        }
+        else { 
+            return false;
+        }
+    }
+    //24
+    else if(strcmp(co.type, "memory") == 0) {
+        int64_t foo = atoll(token);
+        if(foo >= 0 && foo <= 16777215) {
+            uint32_t foos = (uint32_t) foo;
+            co.mem = foos;
+            codeOffset += 4;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    //32
+    else if(strcmp(co.type, "int") == 0) {
+        int64_t foo = atoll(token);
+        if(foo >= INT32_MIN && foo <= INT32_MAX) {
+            int foos = (int) foo;
+            co.ints = foos;
+            codeOffset += 5;
+            return true;
+        }
+        else { 
+            return false;
+        }
+    }
+    //64
+    else if(strcmp(co.type, "long") == 0) {
+        int64_t foo = atoll(token);
+        if(foo >= INT64_MIN && foo <= INT64_MAX) {
+            long long foos = (long long) foo;
+            co.lon = foos;
+            codeOffset += 9;
+            return true;
+        }
+        else { 
+            return false;
+        }
+    }
+    //32
+    else if(strcmp(co.type, "float") == 0) {
+        float foo = atof(token);
+        if(foo >= -__FLT_MAX__ && foo <= __FLT_MAX__) {
+            co.flo = foo;
+            codeOffset += 5;
+            return true;
+        }
+        else { 
+            return false;
+        }
+    }
+    else if(strcmp(co.type, "double") == 0) {
+        double foo = atof(token);
+        if(foo >= -__DBL_MAX__ && foo <= __DBL_MAX__) {
+            co.dou = foo;
+            codeOffset += 9;
+            return true;
+        }
+        else { 
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+}
+
+bool getOperand(struct code co, char str[], int offset) {
+    int offs = 0;
+    char token[100];
+    int index = 0;
+    while (sscanf(str + offs, "%s", token) == 1) {
+        if(index == 1) {
+            return checkCode(co, token, offset);
+        }
+        index++;
+        offs += strlen(token) + 1; 
+    }
+}
+
 int main(int argc, char** argv) {
     //addresses are 24 bit (unsigned, BIG ENDIAN) or operations with labels
     //first 4 bytes of slko are offset of .code, second 4 bytes are offset of .data section (8+P)
@@ -149,7 +269,7 @@ int main(int argc, char** argv) {
     char fileName[strlen(argv[1]) + 3];
     strcpy(fileName, argv[1]);
     if(fileName[strlen(fileName) - 3] != 's' || fileName[strlen(fileName) - 2] != 'l' || fileName[strlen(fileName) - 1] != 'k') {
-        fprintf(stderr, "Invalid slinker filepath 1\n");
+        fprintf(stderr, "Invalid slinker filepath\n");
         exit(1);
     }
     strcat(fileName, "o");
@@ -157,13 +277,13 @@ int main(int argc, char** argv) {
     FILE* file = fopen(argv[1], "r");
     if (file == NULL)
     {
-        fprintf(stderr, "Invalid slinker filepath 2\n");
+        fprintf(stderr, "Invalid slinker filepath\n");
         exit(1);
     }
 
     FILE* output = fopen(fileName, "wb");
     if(output == NULL) {
-        fprintf(stderr, "Invalid slinker filepath 3\n");
+        fprintf(stderr, "Invalid slinker filepath\n");
         exit(1);
     }
 
@@ -173,7 +293,6 @@ int main(int argc, char** argv) {
     //32 bit: {0, 4294967295} {-2147483648, 2147483647} [10]
     //64 bit: {0, 18446744073709551615} {-9223372036854775808, 9223372036854775807} [19, 20 if unsigned]
     char *regexInstructions[] = {
-        //TODO: ADD IN LABELS WITH ARITHMETIC
         //pushb value 00
         "^\tpushb (-?[0-9]{1,3})\n$", //range should be 8 bit integer
         //pushs value 01
@@ -187,19 +306,19 @@ int main(int argc, char** argv) {
         //pushd value 05
         "^\tpushd (\\d*\\.?\\d*)\n$", //64 bit double 
         //pushbm address 06
-        "^\tpushbm ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$", //address will be 24 bit, operation will be 8 bit
+        "^\tpushbm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //address will be 24 bit, operation will be 8 bit
         //pushsm address 07
-        "^\tpushsm ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$", //16 bit
+        "^\tpushsm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //16 bit
         //pushim address 08
-        "^\tpushim ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$", //32 
+        "^\tpushim ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //32 
         //pushlm address 09
-        "^\tpushlm ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$", //64
-        //pushfm address 0a //TODO verify if this actually works buddy
-        "^\tpushfm (\\d*\\.?\\d*|:([a-zA-Z0-9_-]+))\n$", //32 float
+        "^\tpushlm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //64
+        //pushfm address 0a
+        "^\tpushfm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //32 float
         //pushdm address 0b
-        "^\tpushdm (\\d*\\.?\\d*|:([a-zA-Z0-9_-]+))\n$", //64 float
+        "^\tpushdm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //64 float
         //pushmm address items 0c
-        "^\tpushmm ([0-9]{1,8}|:([a-zA-Z0-9_-]+)) ([0,9]{1,3})\n$", //items is 8 bit, operation is 8 bit
+        "^\tpushmm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+) ([0,9]{1,3})\n$", //items is 8 bit, operation is 8 bit
         //dupb 0e
         "^\tdupb\n$",
         //dups 0e
@@ -225,19 +344,19 @@ int main(int argc, char** argv) {
         //popd 18
         "^\tpopd\n$",
         //popbm address 19
-        "^\tpopbm ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$", //8 bit
+        "^\tpopbm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //8 bit
         //popsm address 1a
-        "^\tpopsm ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$", //16 bit
+        "^\tpopsm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //16 bit
         //popim address 1b
-        "^\tpopim ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$", //32 bit
+        "^\tpopim ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //32 bit
         //poplm address 1c
-        "^\tpoplm ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$", //64 bit integer
+        "^\tpoplm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //64 bit integer
         //popfm address 1d 
-        "^\tpopfm (\\d*\\.?\\d*|:([a-zA-Z0-9_-]+))\n$", //32 bit float 
+        "^\tpopfm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //32 bit float 
         //popdm address 1e 
-        "^\tpopdm (\\d*\\.?\\d*|:([a-zA-Z0-9_-]+))\n$", //64 bit float
+        "^\tpopdm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //64 bit float
         //popmm address items 1f
-        "^\tpopmm ([0-9]{1,8}|:([a-zA-Z0-9_-]+) ([0,9]{1,3}))\n$", //items is 8 bit
+        "^\tpopmm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+) ([0,9]{1,3}))\n$", //items is 8 bit
         //swapb 20  
         "^\tswapb\n$",
         //swaps 21
@@ -439,29 +558,29 @@ int main(int argc, char** argv) {
         //jmp address 83
         "^\tjmp ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$", 
         //jrpc offset 84
-        "^\tjrpc (-?[0-9]{1,3})\n$", //signed 8 bit //TODO MAKE SURE CANT HAVE LABEL HERE
+        "^\tjrpc (-?[0-9]{1,3})\n$", //signed 8 bit
         //jind 85
         "^\tjind\n$",
         //jz address 86
-        "^\tjz ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$",
+        "^\tjz ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$",
         //jnz address 87
-        "^\tjz ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$",
+        "^\tjnz ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$",
         //jgt address 88
-        "^\tjgt ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$",
+        "^\tjgt ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$",
         //jlt address 89
-        "^\tjlt ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$",
+        "^\tjlt ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$",
         //jge address 8a
-        "^\tjge ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$",
+        "^\tjge ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$",
         //jle address 8b
-        "^\tjle ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$",
+        "^\tjle ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$",
         //call address 8c
-        "^\tcall ([0-9]{1,8}|:([a-zA-Z0-9_-]+))\n$",
+        "^\tcall ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$",
         //return 8d
         "^\treturn\n$",
         //halt 8e
         "^\thalt\n$",
-        //labels 143 //TODO ADD IN LABELS W OPERATION FOR INSTRUCTIONS 
-        "^:([a-zA-Z0-9_-]+\n$)",
+        //labels 143
+        "^:[a-zA-Z0-9_-]+\n$",
         //.code 144
         "^.code\n$",
         //.data 145
@@ -486,6 +605,17 @@ int main(int argc, char** argv) {
         "^\t[a-zA-Z]\n$"
     };
 
+    /*for (int i = 0; i < 41; i++) {
+                if (regexec(&regEx[i], str, 0, NULL, 0) == 0) {
+                    value = i;
+                    printf("regex val %d\n", value);
+                    break;
+                }
+            }
+    char test[100];
+    strcpy(test, ".code\n"); */
+
+    
     //pass 1: counting labels
     char str[100];
     int countLabels = 0;
@@ -498,21 +628,20 @@ int main(int argc, char** argv) {
         if(str[0] == ':') {
             countLabels++;
         }
-        if(strcmp(str, ".code") == 0) {
+        if(strcmp(str, ".code\n") == 0) {
             hasCode = true;
             codeSection = true;
             dataSection = false;
-            typ = NULL;
         }
-        else if(strcmp(str, ".data") == 0) {
+        else if(strcmp(str, ".data\n") == 0) {
             hasCode = true;
             codeSection = false;
             dataSection = true;
         }
-        else if(strcmp(str, ".byte") == 0 || strcmp(str, ".ascii") == 0 || strcmp(str, ".short") == 0 || strcmp(str, ".int") == 0 || strcmp(str, ".long") == 0 || strcmp(str, ".float") == 0 || strcmp(str, ".double") == 0 || str[0] == ';') {
+        else if(strcmp(str, ".byte\n") == 0 || strcmp(str, ".ascii\n") == 0 || strcmp(str, ".short\n") == 0 || strcmp(str, ".int\n") == 0 || strcmp(str, ".long\n") == 0 || strcmp(str, ".float\n") == 0 || strcmp(str, ".double\n") == 0 || str[0] == ';') {
             continue;
         }
-        if(codeSection) {
+        else if(codeSection) {
             countCode++;
         }
         else if(dataSection) {
@@ -525,7 +654,8 @@ int main(int argc, char** argv) {
         exit(1);
     }
     rewind(file);
-        
+    
+    //printf("countLabels: %d, countCode: %d, countData: %d\n", countLabels, countCode, countData);
     //pass 2: adding in offsets
     struct label labelsArray[countLabels]; //created a label array
     struct code instrArray[countCode]; //array for instr
@@ -551,15 +681,22 @@ int main(int argc, char** argv) {
     //float: 32 bit float 
     //double: 64 bit float
 
-    int offset = 0;
+    //index for the arrays
+    int datIndex = 0;
+    int codeIndex = 0;
+
+    //int offset = 0;
     int lineNum = 1;
     while(fgets(str, sizeof(str), file) != NULL) {
+        uint8_t opcode;
         //identifying which line type it is 
         if(strncmp(str, ";", 1) != 0) { //ignoring if its a commment
             int value = -1;
-            for (int i = 0; i < 41; i++) {
+            //printf("str: %s\n", str);
+            for (int i = 0; i < 155; i++) {
                 if (regexec(&regEx[i], str, 0, NULL, 0) == 0) {
                     value = i;
+                    //printf("regex val %d\n", value);
                     break;
                 }
             }
@@ -567,34 +704,31 @@ int main(int argc, char** argv) {
             //making sure instructions are in .code section
             if(value >= 0 && value <= 142) {
                 if(!codeSection) {
-                    fprintf(stderr, "Error on line %d", lineNum);
+                    fprintf(stderr, "1Error on line %d\n", lineNum);
                     exit(1);
                 }
 
-                //TODO convert opcode to 1 byte binary but should i even do it here
+                //converts opcode to 1 byte binary
+                opcode = value & 0xFF;
+                //printf("value: %d opcode: %d\n", value, opcode);
             }
 
             //creating a struct based on instruction type
             struct code co;
             struct data dat;
             char typ[7]; //to hold type of data
-            //separate offsets
-            int codeOffset = 0; 
-            int dataOffset = 0;
-            //index for the arrays
-            int datIndex = 0;
-            int codeIndex = 0;
+            
 
             int labelArrayIndex = 0;
             switch(value) {
                 //directives
                 case 144: 
-                    code = true;
-                    data = false;
+                    codeSection = true;
+                    dataSection = false;
                     break;
                 case 145: 
-                    data = true;
-                    code = false;
+                    dataSection = true;
+                    codeSection = false;
                     break;
                 //subdirectives (sets type for data to follow)
                 case 146:
@@ -621,15 +755,15 @@ int main(int argc, char** argv) {
                 //handling number data
                 case 153:
                     //need to make sure its not ascii
-                    if(typ == NULL || strcmp(typ, "ascii") == 0) {
-                        fprintf(stderr, "Error on line %d", lineNum);
+                    if(typ == "" || strcmp(typ, "ascii") == 0) {
+                        fprintf(stderr, "2Error on line %d\n", lineNum);
                         exit(1);
                     }
 
-                    dat.type = typ;
+                    strcpy(dat.type, typ);
                     //confirming that it is formatted correctly
                     if(!checkData(dat, str, dataOffset)) {
-                        fprintf(stderr, "Error on line %d", lineNum);
+                        fprintf(stderr, "3Error on line %d\n", lineNum);
                         exit(1);
                     }
                     dataArray[datIndex] = dat; //assign to array (with initialized data type)
@@ -639,51 +773,156 @@ int main(int argc, char** argv) {
                 //handling ascii
                 case 154: 
                     //need to make sure it is ascii
-                    if(typ == NULL || strcmp(typ, "ascii") != 0) {
-                        fprintf(stderr, "Error on line %d", lineNum);
+                    if(typ == "" || strcmp(typ, "ascii") != 0) {
+                        fprintf(stderr, "4Error on line %d\n", lineNum);
                         exit(1);
                     }
 
-                    dat.type = typ;
+                    strcpy(dat.type, typ);
                     //confirming formatting
                     if(!checkData(dat, str, dataOffset)) {
-                        fprintf(stderr, "Error on line %d", lineNum);
+                        fprintf(stderr, "5Error on line %d\n", lineNum);
                         exit(1);
                     }
                     dataArray[datIndex] = dat; //assign to array
                     datIndex++;
                     resetData(dat); //reset struct
                     break;
+
+
                 //instructions of various sizes
                 //8 bit
                 case 0: case 123: case 124: case 125: case 126: case 127: case 128: case 129: case 130: case 132: 
-                    codeOffset += 2; //1 byte + 1 byte
+                    //TODO technically jrpcs should be unsigned i think so uh that needs to be moved
+                    strcpy(co.type, "byte");
+                    if(!getOperand(co, str, codeOffset)) {
+                        fprintf(stderr, "6Error on line %d\n", lineNum);
+                        exit(1);
+                    }
+                    co.opcode = opcode; 
+                    instrArray[codeIndex] = co;
+                    resetInstr(co);
+                    codeIndex++;
+                    //codeOffset += 2; //1 byte + 1 byte
                     break;
                 //16 bit 
                 case 1: 
-                    codeOffset += 3; //1 + 2 bytes
+                    strcpy(co.type, "short");
+                    if(!getOperand(co, str, codeOffset)) {
+                        fprintf(stderr, "7Error on line %d\n", lineNum);
+                        exit(1);
+                    }
+                    co.opcode = opcode;
+                    instrArray[codeIndex] = co;
+                    resetInstr(co);
+                    codeIndex++;
+                    //codeOffset += 3; //1 + 2 bytes
                     break;
                 //case 24 bit
-                case 6: case 7: case 8: case 9: case 10: case 11: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 131: case 134: case 135: case 136: case 137: case 138: case 139: case 140:
-                    codeOffset += 4; //1 + 3 
+                case 6: case 7: case 8: case 9: case 10: case 11: case 25: case 26: case 27: case 28: case 29: case 30: case 131: case 134: case 135: case 136: case 137: case 138: case 139: case 140:
+                    strcpy(co.type, "memory");
+                    int off = 0;
+                    char tok[100];
+                    int ind = 0;
+                    while (sscanf(str + off, "%s", tok) == 1) {
+                        if(ind == 1) {
+                            if(tok[0] == ':') {
+                                co.mem = -1;
+                                strcpy(co.lab, &tok[1]);
+                                co.lineNum = lineNum;
+                            }
+                        }
+                        ind++;
+                        off += strlen(tok) + 1; 
+                    }
+                    if(co.mem != -1) {
+                        if(!getOperand(co, str, codeOffset)) {
+                            fprintf(stderr, "8Error on line %d\n", lineNum);
+                            exit(1);
+                        }
+                        
+                    }
+                    co.opcode = opcode;
+                    instrArray[codeIndex] = co;
+                    resetInstr(co);
+                    codeIndex++;
+                    break;
+                    //codeOffset += 4; //1 + 3 
                 //32 bit
                 case 2: case 4: 
-                    codeOffset += 5; //1 + 4
+                    strcpy(co.type, "int");
+                    if(!getOperand(co, str, codeOffset)) {
+                        fprintf(stderr, "9Error on line %d\n", lineNum);
+                        exit(1);
+                    }
+                    co.opcode = opcode;
+                    instrArray[codeIndex] = co;
+                    resetInstr(co);
+                    codeIndex++;
+                    //codeOffset += 5; //1 + 4
                     break; 
                 //64 bit
                 case 3: case 5: 
-                    codeOffset += 9; //1 + 8
+                    strcpy(co.type, "double");
+                    if(!getOperand(co, str, codeOffset)) {
+                        fprintf(stderr, "10Error on line %d\n", lineNum);
+                        exit(1);
+                    }
+                    co.opcode = opcode;
+                    instrArray[codeIndex] = co;
+                    resetInstr(co);
+                    codeIndex++;
+                    //codeOffset += 9; //1 + 8
                     break;
                 //24 bit + 8 bit items
                 case 12: case 31:
+                    strcpy(co.type, "specMem");
+                    int offset = 0;
+                    char to[100];
+                    int index = 0;
+                    while (sscanf(str + offset, "%s", to) == 1) {
+                        if(index == 1) {
+                            int64_t foo = atoll(to);
+                            if(foo >= 0 && foo <= 16777215) {
+                                uint32_t foos = (uint32_t) foo;
+                                co.mem = foos;  
+                            }
+                            else {
+                                fprintf(stderr, "11Error on line %d\n", lineNum);
+                                exit(1);
+                            }
+                        }
+                        if(index == 2) {
+                            int64_t foo = atoll(to);
+                            if(foo >= 0 && foo <= UINT8_MAX) {
+                                co.uByte = (uint8_t) foo;
+                            }
+                            else {
+                                fprintf(stderr, "12Error on line %d\n", lineNum);
+                                exit(1);
+                            }
+                        }
+                        index++;
+                        offset += strlen(to) + 1; 
+                    }
+                    co.opcode = opcode;
                     codeOffset += 5; //1 + 3 + 1
+                    instrArray[codeIndex] = co;
+                    resetInstr(co);
+                    codeIndex++;
                     break;
                 //no operands
-                case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55:  case 57: case 58: case 59: case 60: case 61: case 62: case 63: case 64: case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72: case 73: case 74: case 75: case 76: case 77: case 78: case 79: case 80: case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: case 90: case 91: case 92:  case 93: case 94: case 95: case 96: case 97: case 98: case 99: case 100: case 101: case 102: case 103: case 104: case 105: case 106: case 107: case 108: case 109: case 110: case 111: case 112: case 113: case 114: case 115: case 116: case 117: case 118: case 119: case 120: case 121: case 122: case 133: case 141: case 142: 
+                case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55:  case 57: case 58: case 59: case 60: case 61: case 62: case 63: case 64: case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72: case 73: case 74: case 75: case 76: case 77: case 78: case 79: case 80: case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: case 90: case 91: case 92:  case 93: case 94: case 95: case 96: case 97: case 98: case 99: case 100: case 101: case 102: case 103: case 104: case 105: case 106: case 107: case 108: case 109: case 110: case 111: case 112: case 113: case 114: case 115: case 116: case 117: case 118: case 119: case 120: case 121: case 122: case 133: case 141: case 142:
+                     
+                    co.opcode = opcode;
                     codeOffset += 1; //1 byte + 0 operands
+                    instrArray[codeIndex] = co;
+                    //printf("co.opcode: %d, codeIndex: %d, instrArray[%d].opcode: %d\n", opcode, codeIndex, codeIndex, instrArray[codeIndex].opcode);
+                    resetInstr(co);
+                    codeIndex++;
                     break;
                 //label
-                case 143: 
+                case 143: {
                     struct label tempLabel;
                     tempLabel.labelName = strdup(str + 1);
                     int dupe = duplicateExists(labelsArray, tempLabel.labelName, countLabels);
@@ -698,16 +937,145 @@ int main(int argc, char** argv) {
                         labelArrayIndex++;
                     }
                     else {
-                        fprintf(stderr, "Error on line %d\n", lineNum);
+                        fprintf(stderr, "13Error on line %d\n", lineNum);
                         exit(1);
                     }
+                    instrArray[codeIndex] = co;
+                    resetInstr(co);
+                    codeIndex++;
                     break;
+                }
                 default: 
-                    fprintf(stderr, "Error on line %d\n", lineNum);
+                    fprintf(stderr, "14Error on line %d %s\n", lineNum, str);
                     exit(1);
+                    break;
             }
         } 
+        printf("codeOffset: %d, lineNum: %d\n", codeOffset, lineNum);
         lineNum++;
     }
     rewind(file);
+
+    //run through file again, this time replacing labels with memory addresses, so i could just increment counter for code lines and access the element of the array when i get to it, replace label, update value in struct, and array will be updated
+    for(int i = 0; i < countCode; i++) {
+        struct code co = instrArray[i];
+        if(co.mem == -1) {
+            int indexOf = -1;
+            for(int k = 0; k < strlen(labelsArray[i].labelName); k++) {
+                if(labelsArray[i].labelName[k] == '+' || labelsArray[i].labelName[k] == '-') {
+                    indexOf = k;
+                    break;
+                }
+            }
+            int ari = 0;
+            if(indexOf != -1) {
+                char arith[100];
+                strcpy(arith, &labelsArray[i].labelName[indexOf]);
+                ari = atoi(arith);
+            }
+            for(int j = 0; j < countLabels; j++) {
+                if(strcmp(labelsArray[j].labelName, co.lab) == 0) {
+                    co.mem = labelsArray[j].memoryAddress + ari;
+                } 
+            }
+        }
+        if(co.mem == -1) {
+            fprintf(stderr, "15Error on line %d\n", co.lineNum);
+        }
+    } 
+    //iterate through the .code array and the .data array to write to the slko file
+    //.code offset
+    uint32_t offse = 0;
+    offse |= (8 & 0xFF) << 24;
+    offse |= ((8 >> 8) & 0xFF) << 16;
+    offse |= ((8 >> 16) & 0xFF) << 8;
+    offse |= (8 >> 24) & 0xFF;
+    fwrite((const void *)&offse, sizeof(offse), 1, output);
+
+    //.data offset
+    offse = 0;
+    int dOff = 8 + codeOffset;
+    offse |= (dOff & 0xFF) << 24;
+    offse |= ((dOff >> 8) & 0xFF) << 16;
+    offse |= ((dOff >> 16) & 0xFF) << 8;
+    offse |= (dOff >> 24) & 0xFF;
+    fwrite((const void *)&offse, sizeof(offse), 1, output);
+
+    //writing instructions
+    uint8_t op = 0;
+    for(int i = 0; i < countCode; i++) {
+        op = 0;
+        op = instrArray[i].opcode;
+        //printf("instr: %s op: %d\n", instrArray[i].type, op);
+        fwrite((const void *)&op, sizeof(op), 1, output);
+        if(strcmp(instrArray[i].type, "byte") == 0) {
+            int8_t toWrite = instrArray[i].byte;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "short") == 0) {
+            short toWrite = instrArray[i].shor;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "memory") == 0) {
+            uint32_t toWrite = instrArray[i].mem;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "int") == 0) {
+            int toWrite = instrArray[i].ints;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "long") == 0) {
+            long long toWrite = instrArray[i].lon;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "float") == 0) {
+            float toWrite = instrArray[i].flo;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "double") == 0) {
+            double toWrite = instrArray[i].dou;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "specMem") == 0) {
+            uint32_t toWrite = instrArray[i].mem;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            uint8_t toWrit = instrArray[i].uByte;
+            fwrite((const void *)&toWrit, sizeof(toWrit), 1, output);
+        }
+        else {
+            continue;
+        }
+    }
+
+    //writing data
+    for(int i = 0; i < countCode; i++) {
+        if(strcmp(dataArray[i].type, "byte")) {
+            int8_t toWrite = dataArray[i].byte;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "ascii") == 0) {
+            short toWrite = dataArray[i].byte;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "short") == 0) {
+            short toWrite = dataArray[i].shor;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "int") == 0) {
+            int toWrite = dataArray[i].ints;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "long") == 0) {
+            long long toWrite = dataArray[i].lon;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "float") == 0) {
+            float toWrite = dataArray[i].flo;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+        else if(strcmp(instrArray[i].type, "double") == 0) {
+            double toWrite = dataArray[i].dou;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+        }
+    }
 }
