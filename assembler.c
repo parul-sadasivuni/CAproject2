@@ -636,26 +636,31 @@ int main(int argc, char** argv) {
     bool dataSection = false;
     while(fgets(str, sizeof(str), file) != NULL) {
         if(str[0] == ':') {
+            //printf("label\n");
             countLabels++;
         }
-        if(strcmp(str, ".code\n") == 0) {
-           // printf("matching code\n");
+        else if(strcmp(str, ".code\n") == 0) {
+            //printf(".code\n");
             hasCode = true;
             codeSection = true;
             dataSection = false;
         }
         else if(strcmp(str, ".data\n") == 0) {
+            //printf(".data\n");
             hasCode = true;
             codeSection = false;
             dataSection = true;
         }
         else if(strcmp(str, ".byte\n") == 0 || strcmp(str, ".ascii\n") == 0 || strcmp(str, ".short\n") == 0 || strcmp(str, ".int\n") == 0 || strcmp(str, ".long\n") == 0 || strcmp(str, ".float\n") == 0 || strcmp(str, ".double\n") == 0 || str[0] == ';') {
+            //printf("data specification or comment\n");
             continue;
         }
         else if(codeSection) {
+            //printf("instruction\n");
             countCode++;
         }
         else if(dataSection) {
+            //printf("data item str: %s", str);
             countData++;
         }
     }
@@ -718,7 +723,8 @@ int main(int argc, char** argv) {
             //making sure instructions are in .code section
             if(value >= 0 && value <= 142) {
                 if(!codeSection) {
-                    fprintf(stderr, "Error on line %d no code section in file\n", lineNum);
+                    fprintf(stderr, "Error on line %d\n", lineNum);
+                    // fprintf(stderr, "Error on line %d missing code section\n", lineNum);
                     exit(1);
                 }
 
@@ -767,14 +773,16 @@ int main(int argc, char** argv) {
                 case 153:
                     //need to make sure its not ascii
                     if(typ == "" || strcmp(typ, "ascii") == 0) {
-                        fprintf(stderr, "Error on line %d data type doesn't match\n", lineNum);
+                        // fprintf(stderr, "Error on line %d data type doesn't match\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
 
                     strcpy(dat.type, typ);
                     //confirming that it is formatted correctly
                     if(!checkData(str)) {
-                        fprintf(stderr, "Error on line %d data formatted incorrectly\n", lineNum);
+                        // fprintf(stderr, "Error on line %d data formatted incorrectly\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     dataArray[datIndex] = dat; //assign to array (with initialized data type)
@@ -785,14 +793,16 @@ int main(int argc, char** argv) {
                 case 154: 
                     //need to make sure it is ascii
                     if(typ == "" || strcmp(typ, "ascii") != 0) {
-                        fprintf(stderr, "Error on line %d data type doesn't match (ascii)\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
+                        // fprintf(stderr, "Error on line %d data type doesn't match (ascii)\n", lineNum);
                         exit(1);
                     }
 
                     strcpy(dat.type, typ);
                     //confirming formatting
                     if(!checkData(str)) {
-                        fprintf(stderr, "Error on line %d data formatted incorrectly (ascii)\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
+                        // fprintf(stderr, "Error on line %d data formatted incorrectly (ascii)\n", lineNum);1
                         exit(1);
                     }
                     dataArray[datIndex] = dat; //assign to array
@@ -807,7 +817,8 @@ int main(int argc, char** argv) {
                     //TODO jrpcs should be signed so check whether it needs to move
                     strcpy(co.type, "byte");
                     if(!getOperand(co, str)) {
-                        fprintf(stderr, "Error on line %d operand wrong 8 bit\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
+                        // fprintf(stderr, "Error on line %d operand wrong 8 bit\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode; 
@@ -820,7 +831,8 @@ int main(int argc, char** argv) {
                 case 1: 
                     strcpy(co.type, "short");
                     if(!getOperand(co, str)) {
-                        fprintf(stderr, "Error on line %d operand wrong 16 bit\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
+                        // fprintf(stderr, "Error on line %d operand wrong 16 bit\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode;
@@ -849,7 +861,8 @@ int main(int argc, char** argv) {
                     //printf("co.mem: %d\n", co.mem);
                     if(co.mem != -1) {
                         if(!getOperand(co, str)) {
-                            fprintf(stderr, "Error on line %d operand wrong 24 bit\n", lineNum);
+                            // fprintf(stderr, "Error on line %d operand wrong 24 bit\n", lineNum);
+                            fprintf(stderr, "Error on line %d\n", lineNum);
                             exit(1);
                         }
                     }
@@ -866,7 +879,8 @@ int main(int argc, char** argv) {
                 case 2: case 4: 
                     strcpy(co.type, "int");
                     if(!getOperand(co, str)) {
-                        fprintf(stderr, "Error on line %d operand wrong 32 bit\n", lineNum);
+                        // fprintf(stderr, "Error on line %d operand wrong 32 bit\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode;
@@ -879,7 +893,8 @@ int main(int argc, char** argv) {
                 case 3: case 5: 
                     strcpy(co.type, "double");
                     if(!getOperand(co, str)) {
-                        fprintf(stderr, "Error on line %d operand wrong 64 bit\n", lineNum);
+                        // fprintf(stderr, "Error on line %d operand wrong 64 bit\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode;
@@ -902,7 +917,8 @@ int main(int argc, char** argv) {
                                 co.mem = foos;  
                             }
                             else {
-                                fprintf(stderr, "Error on line %d special memory p1\n", lineNum);
+                                // fprintf(stderr, "Error on line %d special memory p1\n", lineNum);
+                                fprintf(stderr, "Error on line %d\n", lineNum);
                                 exit(1);
                             }
                         }
@@ -912,7 +928,8 @@ int main(int argc, char** argv) {
                                 co.uByte = (uint8_t) foo;
                             }
                             else {
-                                fprintf(stderr, "Error on line %d specmem p2\n", lineNum);
+                                // fprintf(stderr, "Error on line %d specmem p2\n", lineNum);
+                                fprintf(stderr, "Error on line %d\n", lineNum);
                                 exit(1);
                             }
                         }
@@ -956,7 +973,8 @@ int main(int argc, char** argv) {
                         labelArrayIndex++;
                     }
                     else {
-                        fprintf(stderr, "Error on line %d label\n", lineNum);
+                        // fprintf(stderr, "Error on line %d label\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     //printf("countCode b: %d codeIndex: %d ", countCode, codeIndex);
@@ -967,7 +985,8 @@ int main(int argc, char** argv) {
                     break;
                 }
                 default: 
-                    fprintf(stderr, "Error on line %d %s switch case\n", lineNum, str);
+                    // fprintf(stderr, "Error on line %d %s switch case\n", lineNum, str);
+                    fprintf(stderr, "Error on line %d\n", lineNum);
                     exit(1);
                     break;
             }
@@ -984,7 +1003,7 @@ int main(int argc, char** argv) {
     //run through file again, this time replacing labels with memory addresses, so i could just increment counter for code lines and access the element of the array when i get to it, replace label, update value in struct, and array will be updated
     for(int i = 0; i < countCode; i++) {
         struct code co = instrArray[i];
-        printf("instruction %d: ", i);
+        //printf("instruction %d: ", i);
         if(co.mem == -1) {
             //printf("has a label, ");
             int indexOf = -1;
@@ -1015,12 +1034,13 @@ int main(int argc, char** argv) {
                 } 
             }
             if(!exists) {
-                fprintf(stderr, "Error on line %d label doesn't exist\n", lineNum);
+                // fprintf(stderr, "Error on line %d label doesn't exist\n", lineNum);
+                fprintf(stderr, "Error on line %d\n", lineNum);
                 exit(1);
             }
             instrArray[i] = co;
         }
-        printf("co.mem: %d\n", co.mem);
+        //printf("co.mem: %d\n", co.mem);
     } 
     //iterate through the .code array and the .data array to write to the slko file
     //.code offset
@@ -1029,7 +1049,7 @@ int main(int argc, char** argv) {
     offse |= ((8 >> 8) & 0xFF) << 16;
     offse |= ((8 >> 16) & 0xFF) << 8;
     offse |= (8 >> 24) & 0xFF;
-    printf("offset: %d\n", offse);
+    //printf("offset: %d\n", offse);
     fwrite((const void *)&offse, sizeof(offse), 1, output);
 
     //.data offset
@@ -1063,7 +1083,7 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(instrArray[i].type, "memory") == 0) {
             uint32_t toWrit = instrArray[i].mem;
-            printf("instruction %d co.mem in writing: %d\n", i, instrArray[i].mem);
+            //printf("instruction %d co.mem in writing: %d\n", i, instrArray[i].mem);
             uint8_t toWrite = 0;
             toWrite = (toWrit >> 16) & 0xFF;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
@@ -1139,8 +1159,9 @@ int main(int argc, char** argv) {
 
     //writing data
     for(int i = 0; i < countData; i++) {
-        if(strcmp(dataArray[i].type, "byte")) {
+        if(strcmp(dataArray[i].type, "byte") == 0) {
             int8_t toWrite = dataArray[i].byte;
+            printf("byte %d\n", toWrite);
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(dataArray[i].type, "ascii") == 0) {
@@ -1149,6 +1170,7 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(dataArray[i].type, "short") == 0) {
             short toWrit = dataArray[i].shor;
+            printf("short %hd\n", toWrit);
             short toWrite = 0;
             toWrite |= (toWrit >> 8) & 0xFF; 
             toWrite |= (toWrit << 8) & 0xFF00; 
@@ -1156,6 +1178,7 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(dataArray[i].type, "int") == 0) {
             int toWrit = dataArray[i].ints;
+            printf("int %d\n", toWrit);
             int toWrite = 0;
             toWrite |= (toWrit >> 24) & 0xFF;
             toWrite |= (toWrit >> 8) & 0xFF00; 
@@ -1165,6 +1188,7 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(dataArray[i].type, "long") == 0) {
             long long toWrit = dataArray[i].lon;
+            printf("long %lld\n", toWrit);
             long long toWrite = 0;
             toWrite |= (toWrit >> 56) & 0xFFLL;
             toWrite |= (toWrit >> 40) & 0xFF00LL; 
@@ -1177,27 +1201,27 @@ int main(int argc, char** argv) {
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(dataArray[i].type, "float") == 0) {
-            int toWrit = 0;
-            memcpy(&toWrit, &dataArray[i].flo, sizeof(float));
-            int toWrite = 0;
-            toWrite |= (toWrit >> 24) & 0xFF;
-            toWrite |= (toWrit >> 8) & 0xFF00; 
-            toWrite |= (toWrit << 8) & 0xFF0000; 
-            toWrite |= (toWrit << 24) & 0xFF000000;
-            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            struct data da = dataArray[i];
+            int8_t *bytes = (int8_t *) &da.flo;
+            for (int i = sizeof(float) - 1; i >= 0; i--) {
+                fputc(bytes[i], output);
+            }
+            // int toWrit = 0;
+            // memcpy(&toWrit, &dataArray[i].flo, sizeof(float));
+            // printf("float %d\n", toWrit);
+            // int toWrite = 0;
+            // toWrite |= (toWrit >> 24) & 0xFF;
+            // toWrite |= (toWrit >> 8) & 0xFF00; 
+            // toWrite |= (toWrit << 8) & 0xFF0000; 
+            // toWrite |= (toWrit << 24) & 0xFF000000;
+            // fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(dataArray[i].type, "double") == 0) {
-            int64_t toWrit = (uint64_t)dataArray[i].dou;
-            int64_t toWrite = 0;
-            toWrite |= (toWrit & 0xFF) << 56;
-            toWrite |= ((toWrit >> 8) & 0xFF) << 48;
-            toWrite |= ((toWrit >> 16) & 0xFF) << 40;
-            toWrite |= ((toWrit >> 24) & 0xFF) << 32;
-            toWrite |= ((toWrit >> 32) & 0xFF) << 24;
-            toWrite |= ((toWrit >> 40) & 0xFF) << 16;
-            toWrite |= ((toWrit >> 48) & 0xFF) << 8;
-            toWrite |= (toWrit >> 56) & 0xFF;
-            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            struct data da = dataArray[i];
+            int8_t *bytes = (int8_t *) &da.dou;
+            for (int i = sizeof(double) - 1; i >= 0; i--) {
+                fputc(bytes[i], output);
+            }
         }
     } 
 }
