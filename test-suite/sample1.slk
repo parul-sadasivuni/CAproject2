@@ -1,5 +1,5 @@
 .code
-	pushdm :N0
+	pushdm :NO
 	pushdm :NO+8
 	addd
 	outd

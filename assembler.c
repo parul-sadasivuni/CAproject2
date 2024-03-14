@@ -18,7 +18,7 @@ struct label {
 struct code {
     char type[7];
     char label[100];
-    int lineNum;
+    //int lineNum;
     uint8_t opcode;
     int8_t byte;
     short shor;
@@ -53,12 +53,16 @@ void resetData() {
 
 void resetInstr() {
     strcpy(co.type, "");
+    strcpy(co.label, "");
+    co.opcode = 0;
     co.byte = 0;
     co.shor = 0;
+    co.mem = 0;
     co.ints = 0;
     co.lon = 0;
     co.flo = 0.0f;
     co.dou = 0;
+    co.uByte = 0;
     strcpy(co.lab, "");
 }
 
@@ -249,7 +253,7 @@ bool checkCode(char token[]) {
     }
 }
 
-bool getOperand(struct code co, char str[], int offset) {
+bool getOperand(struct code co, char str[]) {
     int offs = 0;
     char token[100];
     int index = 0;
@@ -263,7 +267,7 @@ bool getOperand(struct code co, char str[], int offset) {
 }
 
 int main(int argc, char** argv) {
-    char fileName[strlen(argv[1]) + 3];
+    char fileName[strlen(argv[1]) + 2];
     strcpy(fileName, argv[1]);
     if(fileName[strlen(fileName) - 3] != 's' || fileName[strlen(fileName) - 2] != 'l' || fileName[strlen(fileName) - 1] != 'k') {
         fprintf(stderr, "Invalid slinker filepath\n");
@@ -626,6 +630,8 @@ int main(int argc, char** argv) {
     int countCode = 0;
     int countData = 0;
     bool hasCode = false;
+    // int codeSection = 0;
+    // int dataSection = 0;
     bool codeSection = false;
     bool dataSection = false;
     while(fgets(str, sizeof(str), file) != NULL) {
@@ -633,6 +639,7 @@ int main(int argc, char** argv) {
             countLabels++;
         }
         if(strcmp(str, ".code\n") == 0) {
+           // printf("matching code\n");
             hasCode = true;
             codeSection = true;
             dataSection = false;
@@ -652,9 +659,11 @@ int main(int argc, char** argv) {
             countData++;
         }
     }
+
+    //printf("countLabels: %d, countCode: %d, countData: %d, str: %s\n", countLabels, countCode, countData, str);
     //make sure at least 1 .code
     if(!hasCode) {
-        fprintf(stderr, "Error on line 0");
+        fprintf(stderr, "Error on line 0\n");
         exit(1);
     }
     rewind(file);
@@ -670,7 +679,7 @@ int main(int argc, char** argv) {
     for(int i = 0; i < 155; i++) {
         if (regcomp(&regEx[i], regexInstructions[i], REG_EXTENDED) != 0) {
             fprintf(stderr, "Could not compile regex pattern: %s\n", regexInstructions[i]);
-            return 1;
+            exit(1);
         }
     }
 
@@ -692,6 +701,7 @@ int main(int argc, char** argv) {
     //int offset = 0;
     int lineNum = 1;
     while(fgets(str, sizeof(str), file) != NULL) {
+        //printf("whilecount: %d, str: %s\n", countCode, str);
         uint8_t opcode;
         //identifying which line type it is 
         if(strncmp(str, ";", 1) != 0) { //ignoring if its a commment
@@ -704,11 +714,11 @@ int main(int argc, char** argv) {
                     break;
                 }
             }
-            
+            //printf("str: %s value: %d\n", str, value);
             //making sure instructions are in .code section
             if(value >= 0 && value <= 142) {
                 if(!codeSection) {
-                    fprintf(stderr, "Error on line %d\n", lineNum);
+                    fprintf(stderr, "Error on line %d no code section in file\n", lineNum);
                     exit(1);
                 }
 
@@ -757,14 +767,14 @@ int main(int argc, char** argv) {
                 case 153:
                     //need to make sure its not ascii
                     if(typ == "" || strcmp(typ, "ascii") == 0) {
-                        fprintf(stderr, "Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d data type doesn't match\n", lineNum);
                         exit(1);
                     }
 
                     strcpy(dat.type, typ);
                     //confirming that it is formatted correctly
                     if(!checkData(str)) {
-                        fprintf(stderr, "Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d data formatted incorrectly\n", lineNum);
                         exit(1);
                     }
                     dataArray[datIndex] = dat; //assign to array (with initialized data type)
@@ -775,14 +785,14 @@ int main(int argc, char** argv) {
                 case 154: 
                     //need to make sure it is ascii
                     if(typ == "" || strcmp(typ, "ascii") != 0) {
-                        fprintf(stderr, "Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d data type doesn't match (ascii)\n", lineNum);
                         exit(1);
                     }
 
                     strcpy(dat.type, typ);
                     //confirming formatting
                     if(!checkData(str)) {
-                        fprintf(stderr, "Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d data formatted incorrectly (ascii)\n", lineNum);
                         exit(1);
                     }
                     dataArray[datIndex] = dat; //assign to array
@@ -796,8 +806,8 @@ int main(int argc, char** argv) {
                 case 0: case 123: case 124: case 125: case 126: case 127: case 128: case 129: case 130: case 132: 
                     //TODO jrpcs should be signed so check whether it needs to move
                     strcpy(co.type, "byte");
-                    if(!getOperand(co, str, codeOffset)) {
-                        fprintf(stderr, "Error on line %d\n", lineNum);
+                    if(!getOperand(co, str)) {
+                        fprintf(stderr, "Error on line %d operand wrong 8 bit\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode; 
@@ -809,8 +819,8 @@ int main(int argc, char** argv) {
                 //16 bit 
                 case 1: 
                     strcpy(co.type, "short");
-                    if(!getOperand(co, str, codeOffset)) {
-                        fprintf(stderr, "Error on line %d\n", lineNum);
+                    if(!getOperand(co, str)) {
+                        fprintf(stderr, "Error on line %d operand wrong 16 bit\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode;
@@ -830,18 +840,21 @@ int main(int argc, char** argv) {
                             if(tok[0] == ':') {
                                 co.mem = -1;
                                 strcpy(co.lab, &tok[1]);
-                                co.lineNum = lineNum;
+                                //co.lineNum = lineNum;
                             }
                         }
                         ind++;
                         off += strlen(tok) + 1; 
                     }
+                    //printf("co.mem: %d\n", co.mem);
                     if(co.mem != -1) {
-                        if(!getOperand(co, str, codeOffset)) {
-                            fprintf(stderr, "Error on line %d\n", lineNum);
+                        if(!getOperand(co, str)) {
+                            fprintf(stderr, "Error on line %d operand wrong 24 bit\n", lineNum);
                             exit(1);
                         }
-                        
+                    }
+                    else {
+                        codeOffset += 4;
                     }
                     co.opcode = opcode;
                     instrArray[codeIndex] = co;
@@ -852,8 +865,8 @@ int main(int argc, char** argv) {
                 //32 bit
                 case 2: case 4: 
                     strcpy(co.type, "int");
-                    if(!getOperand(co, str, codeOffset)) {
-                        fprintf(stderr, "Error on line %d\n", lineNum);
+                    if(!getOperand(co, str)) {
+                        fprintf(stderr, "Error on line %d operand wrong 32 bit\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode;
@@ -865,8 +878,8 @@ int main(int argc, char** argv) {
                 //64 bit
                 case 3: case 5: 
                     strcpy(co.type, "double");
-                    if(!getOperand(co, str, codeOffset)) {
-                        fprintf(stderr, "Error on line %d\n", lineNum);
+                    if(!getOperand(co, str)) {
+                        fprintf(stderr, "Error on line %d operand wrong 64 bit\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode;
@@ -889,7 +902,7 @@ int main(int argc, char** argv) {
                                 co.mem = foos;  
                             }
                             else {
-                                fprintf(stderr, "Error on line %d\n", lineNum);
+                                fprintf(stderr, "Error on line %d special memory p1\n", lineNum);
                                 exit(1);
                             }
                         }
@@ -899,7 +912,7 @@ int main(int argc, char** argv) {
                                 co.uByte = (uint8_t) foo;
                             }
                             else {
-                                fprintf(stderr, "Error on line %d\n", lineNum);
+                                fprintf(stderr, "Error on line %d specmem p2\n", lineNum);
                                 exit(1);
                             }
                         }
@@ -926,8 +939,13 @@ int main(int argc, char** argv) {
                 case 143: {
                     struct label tempLabel;
                     tempLabel.labelName = strdup(str + 1);
+                    int len = strlen(tempLabel.labelName);
+                    tempLabel.labelName[len-1] = '\0';
+                    
                     int dupe = duplicateExists(labelsArray, tempLabel.labelName, countLabels);
+                    
                     if(dupe == 0) {
+                        
                         if(codeSection) {
                             tempLabel.memoryAddress = codeOffset;    
                         }
@@ -938,52 +956,68 @@ int main(int argc, char** argv) {
                         labelArrayIndex++;
                     }
                     else {
-                        fprintf(stderr, "Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d label\n", lineNum);
                         exit(1);
                     }
-                    instrArray[codeIndex] = co;
+                    //printf("countCode b: %d codeIndex: %d ", countCode, codeIndex);
+                    //instrArray[codeIndex] = co;
+                    //printf("countCode e: %d\n", countCode);
                     //resetInstr();
                     codeIndex++;
                     break;
                 }
                 default: 
-                    fprintf(stderr, "Error on line %d %s\n", lineNum, str);
+                    fprintf(stderr, "Error on line %d %s switch case\n", lineNum, str);
                     exit(1);
                     break;
             }
         } 
-        //printf("codeOffset: %d, lineNum: %d\n", codeOffset, lineNum);
+        printf("codeOffset: %d, lineNum: %d\n", codeOffset, lineNum);
         lineNum++;
         resetInstr();
         resetData();
     }
     rewind(file);
 
+    //printf("countCode: %d\n", countCode);
+
     //run through file again, this time replacing labels with memory addresses, so i could just increment counter for code lines and access the element of the array when i get to it, replace label, update value in struct, and array will be updated
     for(int i = 0; i < countCode; i++) {
         struct code co = instrArray[i];
+        printf("instruction %d: ", i);
         if(co.mem == -1) {
+            printf("has a label, ");
             int indexOf = -1;
-            for(int k = 0; k < strlen(labelsArray[i].labelName); k++) {
-                if(labelsArray[i].labelName[k] == '+' || labelsArray[i].labelName[k] == '-') {
+            for(int k = 0; k < strlen(co.lab); k++) {
+                if(co.lab[k] == '+' || co.lab[k] == '-') {
                     indexOf = k;
+                    printf("indexOf: %d, ", indexOf);
                     break;
                 }
             }
             int ari = 0;
             if(indexOf != -1) {
+                printf("has arithmetic, ");
                 char arith[100];
-                strcpy(arith, &labelsArray[i].labelName[indexOf]);
+                strcpy(arith, &co.lab[indexOf]);
                 ari = atoi(arith);
             }
+            co.lab[indexOf] = '\0';
+            bool exists = false;
             for(int j = 0; j < countLabels; j++) {
+                printf("label: %s ", labelsArray[j].labelName);
+                printf(" co.label %s\n", co.lab);
                 if(strcmp(labelsArray[j].labelName, co.lab) == 0) {
+                    printf("found a label match\n");
                     co.mem = labelsArray[j].memoryAddress + ari;
+                    exists = true;
+                    break;
                 } 
             }
-        }
-        if(co.mem == -1) {
-            fprintf(stderr, "Error on line %d\n", lineNum);
+            if(!exists) {
+                fprintf(stderr, "Error on line %d label doesn't exist\n", lineNum);
+                exit(1);
+            }
         }
     } 
     //iterate through the .code array and the .data array to write to the slko file
@@ -993,15 +1027,18 @@ int main(int argc, char** argv) {
     offse |= ((8 >> 8) & 0xFF) << 16;
     offse |= ((8 >> 16) & 0xFF) << 8;
     offse |= (8 >> 24) & 0xFF;
+    printf("offset: %d\n", offse);
     fwrite((const void *)&offse, sizeof(offse), 1, output);
 
     //.data offset
-    offse = 0;
+    // offse = 0;
     int dOff = 8 + codeOffset;
+    printf("codeoffset: %d\n", codeOffset);
     offse |= (dOff & 0xFF) << 24;
     offse |= ((dOff >> 8) & 0xFF) << 16;
     offse |= ((dOff >> 16) & 0xFF) << 8;
     offse |= (dOff >> 24) & 0xFF;
+    printf("data offset: %d\n", offse);
     fwrite((const void *)&offse, sizeof(offse), 1, output);
 
     //writing instructions
