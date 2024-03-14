@@ -597,22 +597,29 @@ int main(int argc, char** argv) {
         //.double 152
         "^.double\n$",
         //any other number data type 153
-        "^\t\\d+(\\.\\d+)?\n$",
+        "^\t(-?[0-9]+(\\.[0-9]+)?)\n$",
         //ascii data type 154
         "^\t[a-zA-Z]\n$"
     };
 
-    /*for (int i = 0; i < 41; i++) {
-                if (regexec(&regEx[i], str, 0, NULL, 0) == 0) {
-                    value = i;
-                    printf("regex val %d\n", value);
-                    break;
-                }
-            }
-    char test[100];
-    strcpy(test, ".code\n"); */
+    /*regex_t regEx[155];
+    for(int i = 0; i < 155; i++) {
+        if (regcomp(&regEx[i], regexInstructions[i], REG_EXTENDED) != 0) {
+            fprintf(stderr, "Could not compile regex pattern: %s\n", regexInstructions[i]);
+            return 1;
+        }
+    }
 
     
+    char test[100];
+    strcpy(test, "\t32.7\n");
+    for (int i = 0; i < 155; i++) {
+        if (regexec(&regEx[i], test, 0, NULL, 0) == 0) {
+            printf("regex val %d\n", i);
+            break;
+        }
+    } */
+
     //pass 1: counting labels
     char str[100];
     int countLabels = 0;
@@ -1148,5 +1155,5 @@ int main(int argc, char** argv) {
             toWrite |= (toWrit >> 56) & 0xFF;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
-    }
+    } 
 }
