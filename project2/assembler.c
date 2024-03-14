@@ -597,7 +597,7 @@ int main(int argc, char** argv) {
         //.double 152
         "^.double\n$",
         //any other number data type 153
-        "^\t\\d*\\.?\\d*\n$",
+        "^\t\\d+(\\.\\d+)?\n$",
         //ascii data type 154
         "^\t[a-zA-Z]\n$"
     };
@@ -701,7 +701,7 @@ int main(int argc, char** argv) {
             //making sure instructions are in .code section
             if(value >= 0 && value <= 142) {
                 if(!codeSection) {
-                    fprintf(stderr, "1Error on line %d\n", lineNum);
+                    fprintf(stderr, "Error on line %d\n", lineNum);
                     exit(1);
                 }
 
@@ -750,14 +750,14 @@ int main(int argc, char** argv) {
                 case 153:
                     //need to make sure its not ascii
                     if(typ == "" || strcmp(typ, "ascii") == 0) {
-                        fprintf(stderr, "2Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
 
                     strcpy(dat.type, typ);
                     //confirming that it is formatted correctly
                     if(!checkData(str)) {
-                        fprintf(stderr, "3Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     dataArray[datIndex] = dat; //assign to array (with initialized data type)
@@ -768,14 +768,14 @@ int main(int argc, char** argv) {
                 case 154: 
                     //need to make sure it is ascii
                     if(typ == "" || strcmp(typ, "ascii") != 0) {
-                        fprintf(stderr, "4Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
 
                     strcpy(dat.type, typ);
                     //confirming formatting
                     if(!checkData(str)) {
-                        fprintf(stderr, "5Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     dataArray[datIndex] = dat; //assign to array
@@ -790,7 +790,7 @@ int main(int argc, char** argv) {
                     //TODO jrpcs should be signed so check whether it needs to move
                     strcpy(co.type, "byte");
                     if(!getOperand(co, str, codeOffset)) {
-                        fprintf(stderr, "6Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode; 
@@ -803,7 +803,7 @@ int main(int argc, char** argv) {
                 case 1: 
                     strcpy(co.type, "short");
                     if(!getOperand(co, str, codeOffset)) {
-                        fprintf(stderr, "7Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode;
@@ -831,7 +831,7 @@ int main(int argc, char** argv) {
                     }
                     if(co.mem != -1) {
                         if(!getOperand(co, str, codeOffset)) {
-                            fprintf(stderr, "8Error on line %d\n", lineNum);
+                            fprintf(stderr, "Error on line %d\n", lineNum);
                             exit(1);
                         }
                         
@@ -846,7 +846,7 @@ int main(int argc, char** argv) {
                 case 2: case 4: 
                     strcpy(co.type, "int");
                     if(!getOperand(co, str, codeOffset)) {
-                        fprintf(stderr, "9Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode;
@@ -859,7 +859,7 @@ int main(int argc, char** argv) {
                 case 3: case 5: 
                     strcpy(co.type, "double");
                     if(!getOperand(co, str, codeOffset)) {
-                        fprintf(stderr, "10Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     co.opcode = opcode;
@@ -882,7 +882,7 @@ int main(int argc, char** argv) {
                                 co.mem = foos;  
                             }
                             else {
-                                fprintf(stderr, "11Error on line %d\n", lineNum);
+                                fprintf(stderr, "Error on line %d\n", lineNum);
                                 exit(1);
                             }
                         }
@@ -892,7 +892,7 @@ int main(int argc, char** argv) {
                                 co.uByte = (uint8_t) foo;
                             }
                             else {
-                                fprintf(stderr, "12Error on line %d\n", lineNum);
+                                fprintf(stderr, "Error on line %d\n", lineNum);
                                 exit(1);
                             }
                         }
@@ -931,7 +931,7 @@ int main(int argc, char** argv) {
                         labelArrayIndex++;
                     }
                     else {
-                        fprintf(stderr, "13Error on line %d\n", lineNum);
+                        fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
                     instrArray[codeIndex] = co;
@@ -940,7 +940,7 @@ int main(int argc, char** argv) {
                     break;
                 }
                 default: 
-                    fprintf(stderr, "14Error on line %d %s\n", lineNum, str);
+                    fprintf(stderr, "Error on line %d %s\n", lineNum, str);
                     exit(1);
                     break;
             }
@@ -976,7 +976,7 @@ int main(int argc, char** argv) {
             }
         }
         if(co.mem == -1) {
-            fprintf(stderr, "15Error on line %d\n", co.lineNum);
+            fprintf(stderr, "Error on line %d\n", lineNum);
         }
     } 
     //iterate through the .code array and the .data array to write to the slko file
