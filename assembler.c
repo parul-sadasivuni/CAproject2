@@ -972,7 +972,7 @@ int main(int argc, char** argv) {
                     break;
             }
         } 
-        printf("codeOffset: %d, lineNum: %d\n", codeOffset, lineNum);
+        //printf("codeOffset: %d, lineNum: %d\n", codeOffset, lineNum);
         lineNum++;
         resetInstr();
         resetData();
@@ -986,18 +986,18 @@ int main(int argc, char** argv) {
         struct code co = instrArray[i];
         printf("instruction %d: ", i);
         if(co.mem == -1) {
-            printf("has a label, ");
+            //printf("has a label, ");
             int indexOf = -1;
             for(int k = 0; k < strlen(co.lab); k++) {
                 if(co.lab[k] == '+' || co.lab[k] == '-') {
                     indexOf = k;
-                    printf("indexOf: %d, ", indexOf);
+                    //printf("indexOf: %d, ", indexOf);
                     break;
                 }
             }
             int ari = 0;
             if(indexOf != -1) {
-                printf("has arithmetic, ");
+                //printf("has arithmetic, ");
                 char arith[100];
                 strcpy(arith, &co.lab[indexOf]);
                 ari = atoi(arith);
@@ -1005,10 +1005,10 @@ int main(int argc, char** argv) {
             co.lab[indexOf] = '\0';
             bool exists = false;
             for(int j = 0; j < countLabels; j++) {
-                printf("label: %s ", labelsArray[j].labelName);
-                printf(" co.label %s\n", co.lab);
+                //printf("label: %s ", labelsArray[j].labelName);
+                //printf(" co.label %s\n", co.lab);
                 if(strcmp(labelsArray[j].labelName, co.lab) == 0) {
-                    printf("found a label match\n");
+                    //printf("found a label match\n");
                     co.mem = labelsArray[j].memoryAddress + ari;
                     exists = true;
                     break;
@@ -1018,7 +1018,9 @@ int main(int argc, char** argv) {
                 fprintf(stderr, "Error on line %d label doesn't exist\n", lineNum);
                 exit(1);
             }
+            instrArray[i] = co;
         }
+        printf("co.mem: %d\n", co.mem);
     } 
     //iterate through the .code array and the .data array to write to the slko file
     //.code offset
@@ -1031,15 +1033,15 @@ int main(int argc, char** argv) {
     fwrite((const void *)&offse, sizeof(offse), 1, output);
 
     //.data offset
-    // offse = 0;
     int dOff = 8 + codeOffset;
-    printf("codeoffset: %d\n", codeOffset);
-    offse |= (dOff & 0xFF) << 24;
-    offse |= ((dOff >> 8) & 0xFF) << 16;
-    offse |= ((dOff >> 16) & 0xFF) << 8;
-    offse |= (dOff >> 24) & 0xFF;
-    printf("data offset: %d\n", offse);
-    fwrite((const void *)&offse, sizeof(offse), 1, output);
+    uint8_t num = (dOff >> 24) & 0xFF;
+    fwrite((const void *)&num, sizeof(num), 1, output);
+    num = (dOff >> 16) & 0xFF;
+    fwrite((const void *)&num, sizeof(num), 1, output);
+    num = (dOff >> 8) & 0xFF;
+    fwrite((const void *)&num, sizeof(num), 1, output);
+    num = dOff & 0xFF;
+    fwrite((const void *)&num, sizeof(num), 1, output);
 
     //writing instructions
     uint8_t op = 0; 
@@ -1061,12 +1063,17 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(instrArray[i].type, "memory") == 0) {
             uint32_t toWrit = instrArray[i].mem;
-            uint32_t toWrite = 0;
-            toWrite |= (toWrit >> 24) & 0xFF;
-            toWrite |= (toWrit >> 8) & 0xFF00; 
-            toWrite |= (toWrit << 8) & 0xFF0000; 
-            toWrite |= (toWrit << 24) & 0xFF000000;
+            printf("instruction %d co.mem in writing: %d\n", i, instrArray[i].mem);
+            uint8_t toWrite = 0;
+            toWrite = (toWrit >> 16) & 0xFF;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            toWrite = (toWrit >> 8) & 0xFF; 
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            toWrite = toWrit & 0xFF; 
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            // toWrite |= (toWrit << 8) & 0xFF0000; 
+            // toWrite |= (toWrit << 24) & 0xFF000000;
+            // fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(instrArray[i].type, "int") == 0) {
             int toWrit = instrArray[i].ints;
