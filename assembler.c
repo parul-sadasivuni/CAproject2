@@ -303,9 +303,9 @@ int main(int argc, char** argv) {
         //pushl value 03
         "^\tpushl (-?[0-9]{1,19})\n$", //64 bit integer
         //pushf value 04
-        "^\tpushf (\\d*\\.?\\d*)\n$", //32 bit float 
+        "^\tpushf (-?[0-9]+(\\.[0-9]+)?)\n$", //32 bit float 
         //pushd value 05
-        "^\tpushd (\\d*\\.?\\d*)\n$", //64 bit double 
+        "^\tpushd (-?[0-9]+(\\.[0-9]+)?)\n$", //64 bit double 
         //pushbm address 06
         "^\tpushbm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //address will be 24 bit, operation will be 8 bit
         //pushsm address 07
