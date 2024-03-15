@@ -1,0 +1,13 @@
+.code
+:N0
+	pushs 97
+:N1
+.data
+.long
+:N2
+	78
+:N3
+.code
+:N4
+	pushb 98
+:N5

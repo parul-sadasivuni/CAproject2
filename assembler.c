@@ -123,25 +123,25 @@ bool checkData(char str[]) {
     }
     else if(strcmp(dat.type, "float") == 0) {
         float foo = atof(str);
-        if(foo >= -__FLT_MAX__ && foo <= __FLT_MAX__) {
-            dat.flo = foo;
-            dataOffset += 4;
-            return true;
-        }
-        else { 
-            return false;
-        }
+        // if(foo >= -__FLT_MAX__ && foo <= __FLT_MAX__) {
+        dat.flo = foo;
+        dataOffset += 4;
+        // return true;
+        // }
+        // else { 
+        //     return false;
+        // }
     }
     else if(strcmp(dat.type, "double") == 0) {
         double foo = strtod(str, NULL);
-        if(foo >= -__DBL_MAX__ && foo <= __DBL_MAX__) {
-            dat.dou = foo;
-            dataOffset += 8;
-            return true;
-        }
-        else { 
-            return false;
-        }
+        //if(foo >= -__DBL_MAX__ && foo <= __DBL_MAX__) {
+        dat.dou = foo;
+        dataOffset += 8;
+        //     return true;
+        // }
+        // else { 
+        //     return false;
+        // }
     }
     else {
         return false;
@@ -267,7 +267,7 @@ bool getOperand(struct code co, char str[]) {
 }
 
 int main(int argc, char** argv) {
-    char fileName[strlen(argv[1]) + 2];
+    //char fileName[strlen(argv[1]) + 2];
     strcpy(fileName, argv[1]);
     if(fileName[strlen(fileName) - 3] != 's' || fileName[strlen(fileName) - 2] != 'l' || fileName[strlen(fileName) - 1] != 'k') {
         fprintf(stderr, "Invalid slinker filepath\n");
