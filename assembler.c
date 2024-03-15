@@ -148,8 +148,9 @@ bool checkData(char str[]) {
     }
 }
 
-int duplicateExists(struct label labelArray[], char* str, int size) {
+int duplicateExists(struct label labelArray[], char str[], int size) {
     for(int i = 0; i < size; i++) {
+        //printf("label %d %s", i, labelArray[i].labelName);
         if (strcmp(labelArray[i].labelName, str) == 0) {
             return 1;
         }
@@ -636,7 +637,7 @@ int main(int argc, char** argv) {
     bool dataSection = false;
     while(fgets(str, sizeof(str), file) != NULL) {
         if(str[0] == ':') {
-            //printf("label\n");
+            //printf("label ");
             countLabels++;
         }
         else if(strcmp(str, ".code\n") == 0) {
@@ -663,9 +664,9 @@ int main(int argc, char** argv) {
             //printf("data item str: %s", str);
             countData++;
         }
+        //printf("countLabels: %d, countCode: %d, countData: %d\n", countLabels, countCode, countData);
     }
-
-    //printf("countLabels: %d, countCode: %d, countData: %d, str: %s\n", countLabels, countCode, countData, str);
+    
     //make sure at least 1 .code
     if(!hasCode) {
         remove(fileName);
@@ -674,7 +675,6 @@ int main(int argc, char** argv) {
     }
     rewind(file);
     
-    //printf("countLabels: %d, countCode: %d, countData: %d\n", countLabels, countCode, countData);
     //pass 2: adding in offsets
     struct label labelsArray[countLabels]; //created a label array
     struct code instrArray[countCode]; //array for instr
@@ -821,7 +821,6 @@ int main(int argc, char** argv) {
                 //instructions of various sizes
                 //8 bit
                 case 0: case 123: case 124: case 125: case 126: case 127: case 128: case 129: case 130: case 132: 
-                    //TODO jrpcs should be signed so check whether it needs to move
                     strcpy(co.type, "byte");
                     if(!getOperand(co, str)) {
                         remove(fileName);
@@ -958,7 +957,6 @@ int main(int argc, char** argv) {
                     break;
                 //no operands
                 case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55:  case 57: case 58: case 59: case 60: case 61: case 62: case 63: case 64: case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72: case 73: case 74: case 75: case 76: case 77: case 78: case 79: case 80: case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: case 90: case 91: case 92:  case 93: case 94: case 95: case 96: case 97: case 98: case 99: case 100: case 101: case 102: case 103: case 104: case 105: case 106: case 107: case 108: case 109: case 110: case 111: case 112: case 113: case 114: case 115: case 116: case 117: case 118: case 119: case 120: case 121: case 122: case 133: case 141: case 142:
-                     
                     co.opcode = opcode;
                     codeOffset += 1; //1 byte + 0 operands
                     instrArray[codeIndex] = co;
@@ -970,13 +968,12 @@ int main(int argc, char** argv) {
                 case 143: {
                     struct label tempLabel;
                     tempLabel.labelName = strdup(str + 1);
+                    
                     int len = strlen(tempLabel.labelName);
                     tempLabel.labelName[len-1] = '\0';
-                    
-                    int dupe = duplicateExists(labelsArray, tempLabel.labelName, countLabels);
-                    
+                    //printf("name %s ", tempLabel.labelName);
+                    int dupe = duplicateExists(labelsArray, tempLabel.labelName, labelArrayIndex);
                     if(dupe == 0) {
-                        
                         if(codeSection) {
                             tempLabel.memoryAddress = codeOffset;    
                         }
@@ -984,6 +981,7 @@ int main(int argc, char** argv) {
                             tempLabel.memoryAddress = 0x10000 + dataOffset;
                         }
                         labelsArray[labelArrayIndex] = tempLabel;
+                        //printf("address: %d\n", labelsArray[labelArrayIndex].memoryAddress);
                         labelArrayIndex++;
                     }
                     else {
@@ -1179,7 +1177,7 @@ int main(int argc, char** argv) {
     for(int i = 0; i < countData; i++) {
         if(strcmp(dataArray[i].type, "byte") == 0) {
             int8_t toWrite = dataArray[i].byte;
-            printf("byte %d\n", toWrite);
+            //printf("byte %d\n", toWrite);
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(dataArray[i].type, "ascii") == 0) {
@@ -1206,7 +1204,6 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(dataArray[i].type, "long") == 0) {
             long long toWrit = dataArray[i].lon;
-            printf("long %lld\n", toWrit);
             long long toWrite = 0;
             toWrite |= (toWrit >> 56) & 0xFFLL;
             toWrite |= (toWrit >> 40) & 0xFF00LL; 
@@ -1234,3 +1231,6 @@ int main(int argc, char** argv) {
         }
     } 
 }
+
+//TODO fix labels (at least partially)
+//TODO simulate!
