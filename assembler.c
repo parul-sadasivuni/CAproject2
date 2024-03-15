@@ -668,6 +668,7 @@ int main(int argc, char** argv) {
     //printf("countLabels: %d, countCode: %d, countData: %d, str: %s\n", countLabels, countCode, countData, str);
     //make sure at least 1 .code
     if(!hasCode) {
+        remove(fileName);
         fprintf(stderr, "Error on line 0\n");
         exit(1);
     }
@@ -683,6 +684,7 @@ int main(int argc, char** argv) {
     regex_t regEx[155];
     for(int i = 0; i < 155; i++) {
         if (regcomp(&regEx[i], regexInstructions[i], REG_EXTENDED) != 0) {
+            remove(fileName);
             fprintf(stderr, "Could not compile regex pattern: %s\n", regexInstructions[i]);
             exit(1);
         }
@@ -723,6 +725,7 @@ int main(int argc, char** argv) {
             //making sure instructions are in .code section
             if(value >= 0 && value <= 142) {
                 if(!codeSection) {
+                    remove(fileName);
                     fprintf(stderr, "Error on line %d\n", lineNum);
                     // fprintf(stderr, "Error on line %d missing code section\n", lineNum);
                     exit(1);
@@ -774,6 +777,7 @@ int main(int argc, char** argv) {
                     //need to make sure its not ascii
                     if(typ == "" || strcmp(typ, "ascii") == 0) {
                         // fprintf(stderr, "Error on line %d data type doesn't match\n", lineNum);
+                        remove(fileName);
                         fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
@@ -782,6 +786,7 @@ int main(int argc, char** argv) {
                     //confirming that it is formatted correctly
                     if(!checkData(str)) {
                         // fprintf(stderr, "Error on line %d data formatted incorrectly\n", lineNum);
+                        remove(fileName);
                         fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
@@ -793,6 +798,7 @@ int main(int argc, char** argv) {
                 case 154: 
                     //need to make sure it is ascii
                     if(typ == "" || strcmp(typ, "ascii") != 0) {
+                        remove(fileName);
                         fprintf(stderr, "Error on line %d\n", lineNum);
                         // fprintf(stderr, "Error on line %d data type doesn't match (ascii)\n", lineNum);
                         exit(1);
@@ -801,6 +807,7 @@ int main(int argc, char** argv) {
                     strcpy(dat.type, typ);
                     //confirming formatting
                     if(!checkData(str)) {
+                        remove(fileName);
                         fprintf(stderr, "Error on line %d\n", lineNum);
                         // fprintf(stderr, "Error on line %d data formatted incorrectly (ascii)\n", lineNum);1
                         exit(1);
@@ -817,6 +824,7 @@ int main(int argc, char** argv) {
                     //TODO jrpcs should be signed so check whether it needs to move
                     strcpy(co.type, "byte");
                     if(!getOperand(co, str)) {
+                        remove(fileName);
                         fprintf(stderr, "Error on line %d\n", lineNum);
                         // fprintf(stderr, "Error on line %d operand wrong 8 bit\n", lineNum);
                         exit(1);
@@ -831,6 +839,7 @@ int main(int argc, char** argv) {
                 case 1: 
                     strcpy(co.type, "short");
                     if(!getOperand(co, str)) {
+                        remove(fileName);
                         fprintf(stderr, "Error on line %d\n", lineNum);
                         // fprintf(stderr, "Error on line %d operand wrong 16 bit\n", lineNum);
                         exit(1);
@@ -862,6 +871,7 @@ int main(int argc, char** argv) {
                     if(co.mem != -1) {
                         if(!getOperand(co, str)) {
                             // fprintf(stderr, "Error on line %d operand wrong 24 bit\n", lineNum);
+                            remove(fileName);
                             fprintf(stderr, "Error on line %d\n", lineNum);
                             exit(1);
                         }
@@ -880,6 +890,7 @@ int main(int argc, char** argv) {
                     strcpy(co.type, "int");
                     if(!getOperand(co, str)) {
                         // fprintf(stderr, "Error on line %d operand wrong 32 bit\n", lineNum);
+                        remove(fileName);
                         fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
@@ -894,6 +905,7 @@ int main(int argc, char** argv) {
                     strcpy(co.type, "double");
                     if(!getOperand(co, str)) {
                         // fprintf(stderr, "Error on line %d operand wrong 64 bit\n", lineNum);
+                        remove(fileName);
                         fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
@@ -918,6 +930,7 @@ int main(int argc, char** argv) {
                             }
                             else {
                                 // fprintf(stderr, "Error on line %d special memory p1\n", lineNum);
+                                remove(fileName);
                                 fprintf(stderr, "Error on line %d\n", lineNum);
                                 exit(1);
                             }
@@ -929,6 +942,7 @@ int main(int argc, char** argv) {
                             }
                             else {
                                 // fprintf(stderr, "Error on line %d specmem p2\n", lineNum);
+                                remove(fileName);
                                 fprintf(stderr, "Error on line %d\n", lineNum);
                                 exit(1);
                             }
@@ -974,6 +988,7 @@ int main(int argc, char** argv) {
                     }
                     else {
                         // fprintf(stderr, "Error on line %d label\n", lineNum);
+                        remove(fileName);
                         fprintf(stderr, "Error on line %d\n", lineNum);
                         exit(1);
                     }
@@ -986,6 +1001,7 @@ int main(int argc, char** argv) {
                 }
                 default: 
                     // fprintf(stderr, "Error on line %d %s switch case\n", lineNum, str);
+                    remove(fileName);
                     fprintf(stderr, "Error on line %d\n", lineNum);
                     exit(1);
                     break;
@@ -1035,6 +1051,7 @@ int main(int argc, char** argv) {
             }
             if(!exists) {
                 // fprintf(stderr, "Error on line %d label doesn't exist\n", lineNum);
+                remove(fileName);
                 fprintf(stderr, "Error on line %d\n", lineNum);
                 exit(1);
             }
