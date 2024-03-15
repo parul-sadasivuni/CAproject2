@@ -630,8 +630,6 @@ int main(int argc, char** argv) {
     int countCode = 0;
     int countData = 0;
     bool hasCode = false;
-    // int codeSection = 0;
-    // int dataSection = 0;
     bool codeSection = false;
     bool dataSection = false;
     while(fgets(str, sizeof(str), file) != NULL) {
@@ -703,6 +701,7 @@ int main(int argc, char** argv) {
     int datIndex = 0;
     int codeIndex = 0;
 
+    bool hasHalt = false;
     //int offset = 0;
     int lineNum = 1;
     while(fgets(str, sizeof(str), file) != NULL) {
@@ -944,7 +943,9 @@ int main(int argc, char** argv) {
                     break;
                 //no operands
                 case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: case 43: case 44: case 45: case 46: case 47: case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55:  case 57: case 58: case 59: case 60: case 61: case 62: case 63: case 64: case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72: case 73: case 74: case 75: case 76: case 77: case 78: case 79: case 80: case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: case 90: case 91: case 92:  case 93: case 94: case 95: case 96: case 97: case 98: case 99: case 100: case 101: case 102: case 103: case 104: case 105: case 106: case 107: case 108: case 109: case 110: case 111: case 112: case 113: case 114: case 115: case 116: case 117: case 118: case 119: case 120: case 121: case 122: case 133: case 141: case 142:
-                     
+                    if(value == 142) {
+                        hasHalt = true;
+                    }
                     co.opcode = opcode;
                     codeOffset += 1; //1 byte + 0 operands
                     instrArray[codeIndex] = co;
@@ -995,6 +996,10 @@ int main(int argc, char** argv) {
         lineNum++;
         resetInstr();
         resetData();
+    }
+
+    if(!hasHalt) {
+        fprintf(stderr, "Error on line %d\n", lineNum);
     }
     rewind(file);
 
@@ -1141,12 +1146,13 @@ int main(int argc, char** argv) {
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(instrArray[i].type, "specMem") == 0) {
-            uint32_t toWrit = instrArray[i].mem;
-            uint32_t toWrite = 0;
-            toWrite |= (toWrit >> 24) & 0xFF;
-            toWrite |= (toWrit >> 8) & 0xFF00; 
-            toWrite |= (toWrit << 8) & 0xFF0000; 
-            toWrite |= (toWrit << 24) & 0xFF000000;
+           uint32_t toWrit = instrArray[i].mem;
+            uint8_t toWrite = 0;
+            toWrite = (toWrit >> 16) & 0xFF;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            toWrite = (toWrit >> 8) & 0xFF; 
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            toWrite = toWrit & 0xFF; 
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
 
             uint8_t toWrit2 = instrArray[i].uByte;
