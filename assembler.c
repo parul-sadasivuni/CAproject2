@@ -1142,13 +1142,13 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(instrArray[i].type, "specMem") == 0) {
             uint32_t toWrit = instrArray[i].mem;
-        //    `uint8_t toWrite = 0;
-        //     toWrite = (toWrit >> 16) & 0xFF;
-        //     fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
-        //     toWrite = (toWrit >> 8) & 0xFF; 
-        //     fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
-        //     toWrite = toWrit & 0xFF; 
-        //     fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            uint8_t toWrite = 0;
+            toWrite = (toWrit >> 16) & 0xFF;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            toWrite = (toWrit >> 8) & 0xFF; 
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            toWrite = toWrit & 0xFF; 
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
 
             uint8_t toWrit2 = instrArray[i].uByte;
             fwrite((const void *)&toWrit2, sizeof(toWrit2), 1, output);
