@@ -499,7 +499,7 @@ int main(int argc, char** argv) {
         //divb 65
         "^\tdivb\n$",
         //divs 66
-        "^\tdivb\n$",
+        "^\tdivs\n$",
         //divi 67
         "^\tdivi\n$",
         //divl 68
@@ -1142,11 +1142,12 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(instrArray[i].type, "specMem") == 0) {
             uint32_t toWrit = instrArray[i].mem;
-            uint32_t toWrite = 0;
-            toWrite |= (toWrit >> 24) & 0xFF;
-            toWrite |= (toWrit >> 8) & 0xFF00; 
-            toWrite |= (toWrit << 8) & 0xFF0000; 
-            toWrite |= (toWrit << 24) & 0xFF000000;
+           `uint8_t toWrite = 0;
+            toWrite = (toWrit >> 16) & 0xFF;
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            toWrite = (toWrit >> 8) & 0xFF; 
+            fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
+            toWrite = toWrit & 0xFF; 
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
 
             uint8_t toWrit2 = instrArray[i].uByte;
@@ -1206,15 +1207,6 @@ int main(int argc, char** argv) {
             for (int i = sizeof(float) - 1; i >= 0; i--) {
                 fputc(bytes[i], output);
             }
-            // int toWrit = 0;
-            // memcpy(&toWrit, &dataArray[i].flo, sizeof(float));
-            // printf("float %d\n", toWrit);
-            // int toWrite = 0;
-            // toWrite |= (toWrit >> 24) & 0xFF;
-            // toWrite |= (toWrit >> 8) & 0xFF00; 
-            // toWrite |= (toWrit << 8) & 0xFF0000; 
-            // toWrite |= (toWrit << 24) & 0xFF000000;
-            // fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(dataArray[i].type, "double") == 0) {
             struct data da = dataArray[i];
