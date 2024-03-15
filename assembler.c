@@ -1183,7 +1183,7 @@ int main(int argc, char** argv) {
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(dataArray[i].type, "ascii") == 0) {
-            short toWrite = dataArray[i].byte;
+            int8_t toWrite = dataArray[i].byte;
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(dataArray[i].type, "short") == 0) {
