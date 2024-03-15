@@ -267,7 +267,7 @@ bool getOperand(struct code co, char str[]) {
 }
 
 int main(int argc, char** argv) {
-    //char fileName[strlen(argv[1]) + 2];
+    char fileName[strlen(argv[1]) + 2];
     strcpy(fileName, argv[1]);
     if(fileName[strlen(fileName) - 3] != 's' || fileName[strlen(fileName) - 2] != 'l' || fileName[strlen(fileName) - 1] != 'k') {
         fprintf(stderr, "Invalid slinker filepath\n");
