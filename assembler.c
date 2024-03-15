@@ -123,28 +123,28 @@ bool checkData(char str[]) {
     }
     else if(strcmp(dat.type, "float") == 0) {
         float foo = atof(str);
-        if(foo >= -__FLT_MAX__ && foo <= __FLT_MAX__) {
-            dat.flo = foo;
-            dataOffset += 4;
-            return true;
-        }
-        else { 
-            return false;
-        }
+        // if(foo >= -__FLT_MAX__ && foo <= __FLT_MAX__) {
+        dat.flo = foo;
+        dataOffset += 4;
+        return true;
+        // }
+        // else { 
+        //     return false;
+        // }
     }
     else if(strcmp(dat.type, "double") == 0) {
         double foo = atof(str);
-        if(foo >= -__DBL_MAX__ && foo <= __DBL_MAX__) {
-            dat.dou = foo;
-            dataOffset += 8;
-            return true;
-        }
-        else { 
-            return false;
-        }
-    }
-    else {
-        return false;
+        // if(foo >= -__DBL_MAX__ && foo <= __DBL_MAX__) {
+        dat.dou = foo;
+        dataOffset += 8;
+        return true;
+    //     }
+    //     else { 
+    //         return false;
+    //     }
+    // }
+    // else {
+    //     return false;
     }
 }
 
