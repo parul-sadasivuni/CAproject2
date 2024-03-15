@@ -319,7 +319,7 @@ int main(int argc, char** argv) {
         //pushdm address 0b
         "^\tpushdm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //64 float
         //pushmm address items 0c
-        "^\tpushmm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+) ([0,9]{1,3})\n$", //items is 8 bit, operation is 8 bit
+        "^\tpushmm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+) ([0-9]{1,3})\n$", //items is 8 bit, operation is 8 bit
         //dupb 0e
         "^\tdupb\n$",
         //dups 0e
@@ -357,7 +357,7 @@ int main(int argc, char** argv) {
         //popdm address 1e 
         "^\tpopdm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+)\n$", //64 bit float
         //popmm address items 1f
-        "^\tpopmm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+) ([0,9]{1,3}))\n$", //items is 8 bit
+        "^\tpopmm ([0-9]{1,8}|:[a-zA-Z0-9_-]+|:[a-zA-Z0-9_-]+\\+?\\-?[0-9]+) ([0-9]{1,3})\n$", //items is 8 bit
         //swapb 20  
         "^\tswapb\n$",
         //swaps 21
