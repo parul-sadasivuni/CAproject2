@@ -973,10 +973,9 @@ int main(int argc, char** argv) {
                     int len = strlen(tempLabel.labelName);
                     tempLabel.labelName[len-1] = '\0';
                     
-                    int dupe = duplicateExists(labelsArray, tempLabel.labelName, countLabels);
+                    int dupe = duplicateExists(labelsArray, tempLabel.labelName, labelArrayIndex);
                     
                     if(dupe == 0) {
-                        
                         if(codeSection) {
                             tempLabel.memoryAddress = codeOffset;    
                         }
@@ -1179,7 +1178,7 @@ int main(int argc, char** argv) {
     for(int i = 0; i < countData; i++) {
         if(strcmp(dataArray[i].type, "byte") == 0) {
             int8_t toWrite = dataArray[i].byte;
-            printf("byte %d\n", toWrite);
+            //printf("byte %d\n", toWrite);
             fwrite((const void *)&toWrite, sizeof(toWrite), 1, output);
         }
         else if(strcmp(dataArray[i].type, "ascii") == 0) {
@@ -1188,7 +1187,7 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(dataArray[i].type, "short") == 0) {
             short toWrit = dataArray[i].shor;
-            printf("short %hd\n", toWrit);
+            //printf("short %hd\n", toWrit);
             short toWrite = 0;
             toWrite |= (toWrit >> 8) & 0xFF; 
             toWrite |= (toWrit << 8) & 0xFF00; 
@@ -1196,7 +1195,7 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(dataArray[i].type, "int") == 0) {
             int toWrit = dataArray[i].ints;
-            printf("int %d\n", toWrit);
+            //printf("int %d\n", toWrit);
             int toWrite = 0;
             toWrite |= (toWrit >> 24) & 0xFF;
             toWrite |= (toWrit >> 8) & 0xFF00; 
@@ -1206,7 +1205,7 @@ int main(int argc, char** argv) {
         }
         else if(strcmp(dataArray[i].type, "long") == 0) {
             long long toWrit = dataArray[i].lon;
-            printf("long %lld\n", toWrit);
+            //printf("long %lld\n", toWrit);
             long long toWrite = 0;
             toWrite |= (toWrit >> 56) & 0xFFLL;
             toWrite |= (toWrit >> 40) & 0xFF00LL; 
