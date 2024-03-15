@@ -148,8 +148,10 @@ bool checkData(char str[]) {
     }
 }
 
-int duplicateExists(struct label labelArray[], char* str, int size) {
+int duplicateExists(struct label labelArray[], char str[], int size) {
+    //printf("size: %d\n", size);
     for(int i = 0; i < size; i++) {
+        // printf("labelname %s tempname %s\n", labelArray[i].labelName, str);
         if (strcmp(labelArray[i].labelName, str) == 0) {
             return 1;
         }
@@ -707,6 +709,7 @@ int main(int argc, char** argv) {
 
     //int offset = 0;
     int lineNum = 1;
+    int labelArrayIndex = 0;
     while(fgets(str, sizeof(str), file) != NULL) {
         //printf("whilecount: %d, str: %s\n", countCode, str);
         uint8_t opcode;
@@ -738,8 +741,6 @@ int main(int argc, char** argv) {
 
             char typ[7]; //to hold type of data
             
-
-            int labelArrayIndex = 0;
             switch(value) {
                 //directives
                 case 144: 
@@ -972,9 +973,7 @@ int main(int argc, char** argv) {
                     tempLabel.labelName = strdup(str + 1);
                     int len = strlen(tempLabel.labelName);
                     tempLabel.labelName[len-1] = '\0';
-                    
                     int dupe = duplicateExists(labelsArray, tempLabel.labelName, labelArrayIndex);
-                    
                     if(dupe == 0) {
                         if(codeSection) {
                             tempLabel.memoryAddress = codeOffset;    
