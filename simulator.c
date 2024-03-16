@@ -295,62 +295,62 @@ int main (int argc, char** argv) {
             break;
         case 26: //popsm address 1a
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
-            memory[address] = memory[sp - 2]; 
-            memory[address + 1] = memory[sp - 1]; 
             sp -= 2;
+            memory[address] = memory[sp]; 
+            memory[address + 1] = memory[sp + 1]; 
             pc += 4;
             break;
         case 27: //popim address
-            address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
-            memory[address] = memory[sp - 4]; 
-            memory[address + 1] = memory[sp - 3];
-            memory[address + 2] = memory[sp - 2];
-            memory[address + 3] = memory[sp - 1];
             sp -= 4;
+            address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            memory[address] = memory[sp]; 
+            memory[address + 1] = memory[sp + 1];
+            memory[address + 2] = memory[sp + 2];
+            memory[address + 3] = memory[sp + 3];
             pc += 4;
             break;
         case 28: //poplm address
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
-            memory[address] = memory[sp - 7]; 
-            memory[address + 1] = memory[sp - 6];
-            memory[address + 2] = memory[sp - 5];
-            memory[address + 3] = memory[sp - 4];
-            memory[address + 4] = memory[sp - 3]; 
-            memory[address + 5] = memory[sp - 2];
-            memory[address + 6] = memory[sp - 1];
-            memory[address + 7] = memory[sp];
             sp -= 8;
+            memory[address] = memory[sp]; 
+            memory[address + 1] = memory[sp + 1];
+            memory[address + 2] = memory[sp + 2];
+            memory[address + 3] = memory[sp + 3];
+            memory[address + 4] = memory[sp + 4]; 
+            memory[address + 5] = memory[sp + 5];
+            memory[address + 6] = memory[sp + 6];
+            memory[address + 7] = memory[sp + 7];
             pc += 4;
             break;
         case 29: //popfm address 1d
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
-            memory[address] = memory[sp - 3]; 
-            memory[address + 1] = memory[sp - 2];
-            memory[address + 2] = memory[sp - 1];
-            memory[address + 3] = memory[sp];
             sp -= 4;
+            memory[address] = memory[sp]; 
+            memory[address + 1] = memory[sp + 1];
+            memory[address + 2] = memory[sp + 2];
+            memory[address + 3] = memory[sp + 3];
             pc += 4;
             break;
         case 30: //popdm address 1e
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
-            memory[address] = memory[sp - 7]; 
-            memory[address + 1] = memory[sp - 6];
-            memory[address + 2] = memory[sp - 5];
-            memory[address + 3] = memory[sp - 4];
-            memory[address + 4] = memory[sp - 3]; 
-            memory[address + 5] = memory[sp - 2];
-            memory[address + 6] = memory[sp - 1];
-            memory[address + 7] = memory[sp];
             sp -= 8;
+            memory[address] = memory[sp]; 
+            memory[address + 1] = memory[sp + 1];
+            memory[address + 2] = memory[sp + 2];
+            memory[address + 3] = memory[sp + 3];
+            memory[address + 4] = memory[sp + 4]; 
+            memory[address + 5] = memory[sp + 5];
+            memory[address + 6] = memory[sp + 6];
+            memory[address + 7] = memory[sp + 7];
             pc += 4;
             break;
         case 31: {//popmm address items 1f
+            sp -= items;
             items = memory[pc + 4];
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
             for(int i = 0; i < items; i++) {
                 memory[address + i] = memory[sp + i];
             }
-            sp -= items;
             pc += 5;
             break;
         }
