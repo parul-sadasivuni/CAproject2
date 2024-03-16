@@ -807,11 +807,11 @@ int main (int argc, char** argv) {
             break;
         case 0x51: //outf
             sp -= 4;
-            int8_t douBytes[4];
+            int8_t floBytes[4];
             for (int i = 0; i < 4; i++) {
-                douBytes[i] = memory[sp + 3 - i];
+                floBytes[i] = memory[sp + 3 - i];
             }
-            float outf = *((float*)douBytes);
+            float outf = *((float*)floBytes);
             printf("%f\n", outf);
             pc += 1;
             break;
