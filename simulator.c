@@ -126,26 +126,42 @@ int main (int argc, char** argv) {
             pc += 9;
             break;
         }
-        case 4: //pushf value 04
-            memory[sp] = memory[pc + 1];
-            memory[sp + 1] = memory[pc + 2];
-            memory[sp + 2] = memory[pc + 3];
-            memory[sp + 3] = memory[pc + 4];
+        case 4: {//pushf value 04
+            // float pushf = ((float)memory[pc + 1] << 24 & 0xFF| (float)memory[pc + 2] << 16 | (float)memory[pc + 3] << 8 | (float)memory[pc + 4]);
+            // int pf = (int) pushf;
+            char flo[4];
+            for(int i = 0; i < 4; i++) {
+                flo[i] = memory[sp + 3 - i];
+            }
+            float pushf = *((float*)flo);
+            int pf = (int) pushf;
+            memory[sp] = (pf >> 24) & 0xFF;
+            memory[sp + 1] = (pf >> 16) & 0xFF;
+            memory[sp + 2] = (pf >> 8) & 0xFF;
+            memory[sp + 3] = (pf) & 0xFF;
             sp += 4;
             pc += 5;
             break;
-        case 5: //pushd value 05
-            memory[sp] = memory[pc + 1];
-            memory[sp + 1] = memory[pc + 2];
-            memory[sp + 2] = memory[pc + 3];
-            memory[sp + 3] = memory[pc + 4];
-            memory[sp + 4] = memory[pc + 5];
-            memory[sp + 5] = memory[pc + 6];
-            memory[sp + 6] = memory[pc + 7];
-            memory[sp + 7] = memory[pc + 8];
+        }
+        case 5: {//pushd value 05
+            char dou[8];
+            for(int i = 0; i < 8; i++) {
+                dou[i] = memory[sp + 7 - i];
+            }
+            double pd = *((double*)dou);
+            int64_t pushd = (int64_t) pd;
+            memory[sp] = (pushd >> 56) & 0xFF;
+            memory[sp + 1] = (pushd >> 48) & 0xFF;
+            memory[sp + 2] = (pushd >> 40) & 0xFF;
+            memory[sp + 3] = (pushd >> 32) & 0xFF;
+            memory[sp + 4] = (pushd >> 24) & 0xFF;
+            memory[sp + 5] = (pushd >> 16) & 0xFF;
+            memory[sp + 6] = (pushd >> 8) & 0xFF;
+            memory[sp + 7] = (pushd) & 0xFF;
             sp += 8;
             pc += 9;
             break;
+        }
         case 6: //pushbm address 06
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
             if(!(address >= 0 && address <= memSize)) {
