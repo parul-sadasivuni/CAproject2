@@ -807,10 +807,12 @@ int main (int argc, char** argv) {
             break;
         case 0x51: //outf
             sp -= 4;
-            int32_t outf = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
-            union Float flo;
-            flo.sign = outf;
-            printf("%f\n", flo.flt);
+            int8_t douBytes[4];
+            for (int i = 0; i < 4; i++) {
+                douBytes[i] = memory[sp + 3 - i];
+            }
+            float outf = *((float*)douBytes);
+            printf("%f\n", outf);
             pc += 1;
             break;
         case 0x52: //outd
@@ -819,16 +821,7 @@ int main (int argc, char** argv) {
             for (int i = 0; i < 8; i++) {
                 douBytes[i] = memory[sp + 7 - i];
             }
-
             double outd = *((double*)douBytes);
-            // memcpy(douBytes, &memory[sp], 8);
-            // uint8_t reversed_bytes[8];
-            // for (int i = 0; i < 8; i++) {
-            //     reversed_bytes[i] = douBytes[8 - i - 1];
-            // }
-            // int64_t outd = ((int64_t)memory[sp] << 56 | (int64_t)memory[sp + 1] << 48 | (int64_t)memory[sp + 2] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp + 4] << 24 | (int64_t)memory[sp + 5] << 16 | (int64_t)memory[sp + 6] << 8 | (int64_t)memory[sp + 7]);
-            // union Double dou;
-            // memcpy(&dou.dbl, reversed_bytes, sizeof(double));
             printf("%lf\n", outd);
             pc += 1;
             break;
