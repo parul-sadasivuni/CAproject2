@@ -154,9 +154,8 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            short pushsm = ((int16_t)memory[address] << 8 | (int16_t)memory[address + 1]);
-            memory[sp] = (pushsm >> 8) & 0xFF;
-            memory[sp + 1] = pushsm & 0xFF;
+            memory[sp] = memory[address];
+            memory[sp + 1] = memory[address + 1]; 
             sp += 2;
             pc += 4;
             break;
@@ -166,11 +165,10 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            int pushim = ((int)memory[address] << 24 & 0xFF| (int)memory[address + 1] << 16 | (int)memory[address + 2] << 8 | (int)memory[address + 3]);
-            memory[sp] = (pushim >> 24) & 0xFF;
-            memory[sp + 1] = (pushim >> 16) & 0xFF;
-            memory[sp + 2] = (pushim >> 8) & 0xFF;
-            memory[sp + 3] = (pushim) & 0xFF;
+            memory[sp] = memory[address];
+            memory[sp + 1] = memory[address + 1];
+            memory[sp + 2] = memory[address + 2];
+            memory[sp + 3] = memory[address + 3];
             sp += 4;
             pc += 4;
             break;
@@ -180,23 +178,14 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            int64_t pushlm = ((int64_t)memory[address] << 56 & 0xFF| (int64_t)memory[address + 1] << 48 | (int64_t)memory[address + 2] << 40 | (int64_t)memory[address + 3] << 32 | (int64_t)memory[address + 4] << 24 | (int64_t)memory[address + 5] << 16 | (int64_t)memory[address + 6] << 8 | (int64_t)memory[pc + 7]);
-            memory[sp] = (pushlm >> 56) & 0xFF;
-            memory[sp + 1] = (pushlm >> 48) & 0xFF;
-            memory[sp + 2] = (pushlm >> 40) & 0xFF;
-            memory[sp + 3] = (pushlm >> 32) & 0xFF;
-            memory[sp + 4] = (pushlm >> 24) & 0xFF;
-            memory[sp + 5] = (pushlm >> 16) & 0xFF;
-            memory[sp + 6] = (pushlm >> 8) & 0xFF;
-            memory[sp + 7] = (pushlm) & 0xFF;
-            // memory[sp] = memory[address];
-            // memory[sp + 1] = memory[address + 1];
-            // memory[sp + 2] = memory[address + 2];
-            // memory[sp + 3] = memory[address + 3];
-            // memory[sp + 4] = memory[address + 4];
-            // memory[sp + 5] = memory[address + 5];
-            // memory[sp + 6] = memory[address + 6];
-            // memory[sp + 7] = memory[address + 7];
+            memory[sp] = memory[address];
+            memory[sp + 1] = memory[address + 1];
+            memory[sp + 2] = memory[address + 2];
+            memory[sp + 3] = memory[address + 3];
+            memory[sp + 4] = memory[address + 4];
+            memory[sp + 5] = memory[address + 5];
+            memory[sp + 6] = memory[address + 6];
+            memory[sp + 7] = memory[address + 7];
             sp += 8;
             pc += 4;
             break;
