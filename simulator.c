@@ -21,7 +21,7 @@ int main (int argc, char** argv) {
 
     union Double {
         double dbl;
-        int32_t sign;
+        int64_t sign;
     };
 
     //memory array with max size of 512*1024
@@ -815,9 +815,15 @@ int main (int argc, char** argv) {
             break;
         case 0x52: //outd
             sp -= 8;
-            int64_t outd = ((int64_t)memory[sp] << 56 | (int64_t)memory[sp + 1] << 48 | (int64_t)memory[sp + 2] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp + 4] << 24 | (int64_t)memory[sp + 5] << 16 | (int64_t)memory[sp + 6] << 8 | (int64_t)memory[sp + 7]);
+            uint8_t douBytes[8];
+            memcpy(douBytes, &memory[sp], 8);
+            uint8_t reversed_bytes[8];
+            for (int i = 0; i < 8; i++) {
+                reversed_bytes[i] = douBytes[8 - i - 1];
+            }
+            // int64_t outd = ((int64_t)memory[sp] << 56 | (int64_t)memory[sp + 1] << 48 | (int64_t)memory[sp + 2] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp + 4] << 24 | (int64_t)memory[sp + 5] << 16 | (int64_t)memory[sp + 6] << 8 | (int64_t)memory[sp + 7]);
             union Double dou;
-            dou.sign = outd;
+            memcpy(&dou.dbl, reversed_bytes, sizeof(double));
             printf("%lf\n", dou.dbl);
             pc += 1;
             break;
