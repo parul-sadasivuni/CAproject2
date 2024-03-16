@@ -10,6 +10,7 @@ int main (int argc, char** argv) {
     //iterate through the binary file byte by byte
     //figure out which byte the data starts on, iterate through until that byte, put the data into the memory array starting at the heap
     //go through instruction indexes of memory array to execute instructions, update stack pointer and pc as needed 
+    //TODO top of stack is most significant
     //TODO errors: calls are within bounds of memory, must have halt, valid instructions, no division by 0 fprintf(stderr, "Simulation error")
 
     //union for floats
@@ -87,12 +88,14 @@ int main (int argc, char** argv) {
         switch (currentByte) {
         case 0: //pushb value 00
             memory[sp] = memory[pc + 1];
+            printf("memory %d: %d\n", sp, (int)memory[sp]);
             sp += 1;
             pc += 2;
             break;
         case 1: //pushs value 01
             memory[sp] = memory[pc + 1];
             memory[sp + 1] = memory[pc + 2];
+            printf("memory %d: %d, memory %d: %d\n", sp, (int)memory[sp], sp + 1, printf);
             sp += 2;
             pc += 3;
             break;
@@ -218,9 +221,13 @@ int main (int argc, char** argv) {
             break;
         case 15: //dupi 0f
             memory[sp] = memory[sp - 4];
+            printf("memory %d: %d ", sp, memory[sp]);
             memory[sp + 1] = memory[sp - 3];
+            printf("memory %d: %d ", (sp + 1), memory[sp + 1]);
             memory[sp + 2] = memory[sp - 2];
+            printf("memory %d: %d ", (sp + 2), memory[sp + 2]);
             memory[sp + 3] = memory[sp - 1];
+            printf("memory %d: %d\n", (sp + 3), memory[sp + 3]);
             sp += 4;
             pc += 1;
             break;
@@ -782,11 +789,16 @@ int main (int argc, char** argv) {
 
             int32_t sum1 = on + tw;
 
-            memory[sp - 8] = sum1 & 0xFF; //least significant
-            memory[sp - 5] = (sum1 >> 8) & 0xFF;
-            memory[sp - 4] = (sum1 >> 16) & 0xFF; 
-            memory[sp - 3] = (sum1 >> 24) & 0xFF; //most significant
+            memory[sp - 8] =  (sum1 >> 24) & 0xFF; //most significant
+            printf("memory %d: %d ", (sp - 8), memory[sp - 8]);
+            memory[sp - 7] = (sum1 >> 16) & 0xFF; 
+            printf("memory %d: %d ", (sp - 7), memory[sp - 7]);
+            memory[sp - 6] = (sum1 >> 8) & 0xFF;
+            printf("memory %d: %d ", (sp - 6), memory[sp - 6]);
+            memory[sp - 5] = sum1 & 0xFF; //least significant
+            printf("memory %d: %d\n", (sp - 5), memory[sp - 5]);
             sp -= 4;
+
             pc += 1;
             break;
         }
@@ -797,14 +809,14 @@ int main (int argc, char** argv) {
 
             int64_t sum2 = one1 + two1;
 
-            memory[sp - 16] = sum2 & 0xFF; //least significant
-            memory[sp - 15] = (sum2 >> 8) & 0xFF;
-            memory[sp - 14] = (sum2 >> 16) & 0xFF; 
-            memory[sp - 13] = (sum2 >> 24) & 0xFF;
-            memory[sp - 12] = (sum2 >> 32) & 0xFF; 
-            memory[sp - 11] = (sum2 >> 40) & 0xFF;
-            memory[sp - 10] = (sum2 >> 48) & 0xFF;
-            memory[sp - 9] = (sum2 >> 56) & 0xFF; //most significant
+            memory[sp - 9] = sum2 & 0xFF; //least significant
+            memory[sp - 10] = (sum2 >> 8) & 0xFF;
+            memory[sp - 11] = (sum2 >> 16) & 0xFF; 
+            memory[sp - 12] = (sum2 >> 24) & 0xFF;
+            memory[sp - 13] = (sum2 >> 32) & 0xFF; 
+            memory[sp - 14] = (sum2 >> 40) & 0xFF;
+            memory[sp - 15] = (sum2 >> 48) & 0xFF;
+            memory[sp - 16] = (sum2 >> 56) & 0xFF; //most significant
             sp -= 8;
             pc += 1;
             break;
@@ -816,10 +828,10 @@ int main (int argc, char** argv) {
 
             int32_t sum3 = one2 + two2;
             
-            memory[sp - 8] = sum3 & 0xFF; //least significant
-            memory[sp - 5] = (sum3 >> 8) & 0xFF;
-            memory[sp - 4] = (sum3 >> 16) & 0xFF; 
-            memory[sp - 3] = (sum3 >> 24) & 0xFF; //most significant
+            memory[sp - 5] = sum3 & 0xFF; //least significant
+            memory[sp - 6] = (sum3 >> 8) & 0xFF;
+            memory[sp - 7] = (sum3 >> 16) & 0xFF; 
+            memory[sp - 8] = (sum3 >> 24) & 0xFF; //most significant
             sp -= 4;
             pc += 1;
             break;
@@ -831,14 +843,14 @@ int main (int argc, char** argv) {
 
             int64_t sum4 = one3 + two3;
 
-            memory[sp - 16] = sum4 & 0xFF; //least significant
-            memory[sp - 15] = (sum4 >> 8) & 0xFF;
-            memory[sp - 14] = (sum4 >> 16) & 0xFF; 
-            memory[sp - 13] = (sum4 >> 24) & 0xFF;
-            memory[sp - 12] = (sum4 >> 32) & 0xFF; 
-            memory[sp - 11] = (sum4 >> 40) & 0xFF;
-            memory[sp - 10] = (sum4 >> 48) & 0xFF;
-            memory[sp - 9] = (sum4 >> 56) & 0xFF; //most significant
+            memory[sp - 9] = sum4 & 0xFF; //least significant
+            memory[sp - 10] = (sum4 >> 8) & 0xFF;
+            memory[sp - 11] = (sum4 >> 16) & 0xFF; 
+            memory[sp - 12] = (sum4 >> 24) & 0xFF;
+            memory[sp - 13] = (sum4 >> 32) & 0xFF; 
+            memory[sp - 14] = (sum4 >> 40) & 0xFF;
+            memory[sp - 15] = (sum4 >> 48) & 0xFF;
+            memory[sp - 16] = (sum4 >> 56) & 0xFF; //most significant
             sp -= 8;
             pc += 1;
             break;
@@ -852,8 +864,8 @@ int main (int argc, char** argv) {
             short one5 = ((int16_t)memory[sp - 2] << 8 | (int16_t)memory[sp - 1]);
             short two5 = ((int16_t)memory[sp - 4] << 8 | (int16_t)memory[sp - 3]);
             short sum5 = two5 - one5;
-            memory[sp - 4] = sum5 & 0xFF; // least significant
-            memory[sp - 3] = (sum5 >> 8) & 0xFF; //most significant
+            memory[sp - 3] = sum5 & 0xFF; // least significant
+            memory[sp - 4] = (sum5 >> 8) & 0xFF; //most significant
             sp -= 2;
             pc += 1;
         }
@@ -864,10 +876,10 @@ int main (int argc, char** argv) {
 
             int32_t sum6 = two6 - one6;
 
-            memory[sp - 8] = sum6 & 0xFF; //least significant
-            memory[sp - 5] = (sum6 >> 8) & 0xFF;
-            memory[sp - 4] = (sum6 >> 16) & 0xFF; 
-            memory[sp - 3] = (sum6 >> 24) & 0xFF; //most significant
+            memory[sp - 5] = sum6 & 0xFF; //least significant
+            memory[sp - 6] = (sum6 >> 8) & 0xFF;
+            memory[sp - 7] = (sum6 >> 16) & 0xFF; 
+            memory[sp - 8] = (sum6 >> 24) & 0xFF; //most significant
             sp -= 4;
             pc += 1;
             break;
@@ -879,14 +891,14 @@ int main (int argc, char** argv) {
 
             int64_t sum7 = two7 - one7;
 
-            memory[sp - 16] = sum7 & 0xFF; //least significant
-            memory[sp - 15] = (sum7 >> 8) & 0xFF;
-            memory[sp - 14] = (sum7 >> 16) & 0xFF; 
-            memory[sp - 13] = (sum7 >> 24) & 0xFF;
-            memory[sp - 12] = (sum7 >> 32) & 0xFF; 
-            memory[sp - 11] = (sum7 >> 40) & 0xFF;
-            memory[sp - 10] = (sum7 >> 48) & 0xFF;
-            memory[sp - 9] = (sum7 >> 56) & 0xFF; //most significant
+            memory[sp - 9] = sum7 & 0xFF; //least significant
+            memory[sp - 10] = (sum7 >> 8) & 0xFF;
+            memory[sp - 11] = (sum7 >> 16) & 0xFF; 
+            memory[sp - 12] = (sum7 >> 24) & 0xFF;
+            memory[sp - 13] = (sum7 >> 32) & 0xFF; 
+            memory[sp - 14] = (sum7 >> 40) & 0xFF;
+            memory[sp - 15] = (sum7 >> 48) & 0xFF;
+            memory[sp - 16] = (sum7 >> 56) & 0xFF; //most significant
             sp -= 8;
             pc += 1;
             break;
@@ -898,10 +910,10 @@ int main (int argc, char** argv) {
 
             int32_t sum8 = two8 - one8;
 
-            memory[sp - 8] = sum8 & 0xFF; //least significant
-            memory[sp - 5] = (sum8 >> 8) & 0xFF;
-            memory[sp - 4] = (sum8 >> 16) & 0xFF; 
-            memory[sp - 3] = (sum8 >> 24) & 0xFF; //most significant
+            memory[sp - 5] = sum8 & 0xFF; //least significant
+            memory[sp - 6] = (sum8 >> 8) & 0xFF;
+            memory[sp - 7] = (sum8 >> 16) & 0xFF; 
+            memory[sp - 8] = (sum8 >> 24) & 0xFF; //most significant
             sp -= 4;
             pc += 1;
             break;
@@ -913,14 +925,14 @@ int main (int argc, char** argv) {
 
             int64_t sum9 = two9 - one9;
 
-            memory[sp - 16] = sum9 & 0xFF; //least significant
-            memory[sp - 15] = (sum9 >> 8) & 0xFF;
-            memory[sp - 14] = (sum9 >> 16) & 0xFF; 
-            memory[sp - 13] = (sum9 >> 24) & 0xFF;
-            memory[sp - 12] = (sum9 >> 32) & 0xFF; 
-            memory[sp - 11] = (sum9 >> 40) & 0xFF;
-            memory[sp - 10] = (sum9 >> 48) & 0xFF;
-            memory[sp - 9] = (sum9 >> 56) & 0xFF; //most significant
+            memory[sp - 9] = sum9 & 0xFF; //least significant
+            memory[sp - 10] = (sum9 >> 8) & 0xFF;
+            memory[sp - 11] = (sum9 >> 16) & 0xFF; 
+            memory[sp - 12] = (sum9 >> 24) & 0xFF;
+            memory[sp - 13] = (sum9 >> 32) & 0xFF; 
+            memory[sp - 14] = (sum9 >> 40) & 0xFF;
+            memory[sp - 15] = (sum9 >> 48) & 0xFF;
+            memory[sp - 16] = (sum9 >> 56) & 0xFF; //most significant
             sp -= 8;
             pc += 1;
             break;
@@ -934,8 +946,8 @@ int main (int argc, char** argv) {
             short onea = ((int16_t)memory[sp - 2] << 8 | (int16_t)memory[sp - 1]);
             short twoa = ((int16_t)memory[sp - 4] << 8 | (int16_t)memory[sp - 3]);
             short suma = twoa * onea;
-            memory[sp - 4] = suma & 0xFF; // least significant
-            memory[sp - 3] = (suma >> 8) & 0xFF; //most significant
+            memory[sp - 3] = suma & 0xFF; // least significant
+            memory[sp - 4] = (suma >> 8) & 0xFF; //most significant
             sp -= 2;
             pc += 1;
         }
@@ -946,10 +958,10 @@ int main (int argc, char** argv) {
 
             int32_t sumb = twob * oneb;
 
-            memory[sp - 8] = sumb & 0xFF; //least significant
-            memory[sp - 5] = (sumb >> 8) & 0xFF;
-            memory[sp - 4] = (sumb >> 16) & 0xFF; 
-            memory[sp - 3] = (sumb >> 24) & 0xFF; //most significant
+            memory[sp - 5] = sumb & 0xFF; //least significant
+            memory[sp - 6] = (sumb >> 8) & 0xFF;
+            memory[sp - 7] = (sumb >> 16) & 0xFF; 
+            memory[sp - 8] = (sumb >> 24) & 0xFF; //most significant
             sp -= 4;
             pc += 1;
             break;
@@ -961,14 +973,14 @@ int main (int argc, char** argv) {
 
             int64_t sumc = twoc * onec;
 
-            memory[sp - 16] = sumc & 0xFF; //least significant
-            memory[sp - 15] = (sumc >> 8) & 0xFF;
-            memory[sp - 14] = (sumc >> 16) & 0xFF; 
-            memory[sp - 13] = (sumc >> 24) & 0xFF;
-            memory[sp - 12] = (sumc >> 32) & 0xFF; 
-            memory[sp - 11] = (sumc >> 40) & 0xFF;
-            memory[sp - 10] = (sumc >> 48) & 0xFF;
-            memory[sp - 9] = (sumc >> 56) & 0xFF; //most significant
+            memory[sp - 9] = sumc & 0xFF; //least significant
+            memory[sp - 10] = (sumc >> 8) & 0xFF;
+            memory[sp - 11] = (sumc >> 16) & 0xFF; 
+            memory[sp - 12] = (sumc >> 24) & 0xFF;
+            memory[sp - 13] = (sumc >> 32) & 0xFF; 
+            memory[sp - 14] = (sumc >> 40) & 0xFF;
+            memory[sp - 15] = (sumc >> 48) & 0xFF;
+            memory[sp - 16] = (sumc >> 56) & 0xFF; //most significant
             sp -= 8;
             pc += 1;
             break;
@@ -980,10 +992,10 @@ int main (int argc, char** argv) {
 
             int32_t sumd = twod * oned;
 
-            memory[sp - 8] = sumd & 0xFF; //least significant
-            memory[sp - 5] = (sumd >> 8) & 0xFF;
-            memory[sp - 4] = (sumd >> 16) & 0xFF; 
-            memory[sp - 3] = (sumd >> 24) & 0xFF; //most significant
+            memory[sp - 5] = sumd & 0xFF; //least significant
+            memory[sp - 6] = (sumd >> 8) & 0xFF;
+            memory[sp - 7] = (sumd >> 16) & 0xFF; 
+            memory[sp - 8] = (sumd >> 24) & 0xFF; //most significant
             sp -= 4;
             pc += 1;
             break;
@@ -995,14 +1007,14 @@ int main (int argc, char** argv) {
 
             int64_t sume = twoe * onee;
 
-            memory[sp - 16] = sume & 0xFF; //least significant
-            memory[sp - 15] = (sume >> 8) & 0xFF;
-            memory[sp - 14] = (sume >> 16) & 0xFF; 
-            memory[sp - 13] = (sume >> 24) & 0xFF;
-            memory[sp - 12] = (sume >> 32) & 0xFF; 
-            memory[sp - 11] = (sume >> 40) & 0xFF;
-            memory[sp - 10] = (sume >> 48) & 0xFF;
-            memory[sp - 9] = (sume >> 56) & 0xFF; //most significant
+            memory[sp - 9] = sume & 0xFF; //least significant
+            memory[sp - 10] = (sume >> 8) & 0xFF;
+            memory[sp - 11] = (sume >> 16) & 0xFF; 
+            memory[sp - 12] = (sume >> 24) & 0xFF;
+            memory[sp - 13] = (sume >> 32) & 0xFF; 
+            memory[sp - 14] = (sume >> 40) & 0xFF;
+            memory[sp - 15] = (sume >> 48) & 0xFF;
+            memory[sp - 16] = (sume >> 56) & 0xFF; //most significant
             sp -= 8;
             pc += 1;
             break;
@@ -1028,10 +1040,10 @@ int main (int argc, char** argv) {
 
             int32_t sumg = twog / oneg;
 
-            memory[sp - 8] = sumg & 0xFF; //least significant
-            memory[sp - 5] = (sumg >> 8) & 0xFF;
-            memory[sp - 4] = (sumg >> 16) & 0xFF; 
-            memory[sp - 3] = (sumg >> 24) & 0xFF; //most significant
+            memory[sp - 5] = sumg & 0xFF; //least significant
+            memory[sp - 6] = (sumg >> 8) & 0xFF;
+            memory[sp - 7] = (sumg >> 16) & 0xFF; 
+            memory[sp - 8] = (sumg >> 24) & 0xFF; //most significant
             sp -= 4;
             pc += 1;
             break;
@@ -1043,14 +1055,14 @@ int main (int argc, char** argv) {
 
             int64_t sumh = twoh / oneh;
 
-            memory[sp - 16] = sumh & 0xFF; //least significant
-            memory[sp - 15] = (sumh >> 8) & 0xFF;
-            memory[sp - 14] = (sumh >> 16) & 0xFF; 
-            memory[sp - 13] = (sumh >> 24) & 0xFF;
-            memory[sp - 12] = (sumh >> 32) & 0xFF; 
-            memory[sp - 11] = (sumh >> 40) & 0xFF;
-            memory[sp - 10] = (sumh >> 48) & 0xFF;
-            memory[sp - 9] = (sumh >> 56) & 0xFF; //most significant
+            memory[sp - 9] = sumh & 0xFF; //least significant
+            memory[sp - 10] = (sumh >> 8) & 0xFF;
+            memory[sp - 11] = (sumh >> 16) & 0xFF; 
+            memory[sp - 12] = (sumh >> 24) & 0xFF;
+            memory[sp - 13] = (sumh >> 32) & 0xFF; 
+            memory[sp - 14] = (sumh >> 40) & 0xFF;
+            memory[sp - 15] = (sumh >> 48) & 0xFF;
+            memory[sp - 16] = (sumh >> 56) & 0xFF; //most significant
             sp -= 8;
             pc += 1;
             break;
@@ -1062,10 +1074,10 @@ int main (int argc, char** argv) {
 
             int32_t sumj = twoj / onej;
 
-            memory[sp - 8] = sumj & 0xFF; //least significant
-            memory[sp - 5] = (sumj >> 8) & 0xFF;
-            memory[sp - 4] = (sumj >> 16) & 0xFF; 
-            memory[sp - 3] = (sumj >> 24) & 0xFF; //most significant
+            memory[sp - 7] = sumj & 0xFF; //least significant
+            memory[sp - 6] = (sumj >> 8) & 0xFF;
+            memory[sp - 5] = (sumj >> 16) & 0xFF; 
+            memory[sp - 8] = (sumj >> 24) & 0xFF; //most significant
             sp -= 4;
             pc += 1;
             break;
@@ -1077,14 +1089,14 @@ int main (int argc, char** argv) {
 
             int64_t sumz = twoz / onez;
 
-            memory[sp - 16] = sumz & 0xFF; //least significant
-            memory[sp - 15] = (sumz >> 8) & 0xFF;
-            memory[sp - 14] = (sumz >> 16) & 0xFF; 
-            memory[sp - 13] = (sumz >> 24) & 0xFF;
-            memory[sp - 12] = (sumz >> 32) & 0xFF; 
-            memory[sp - 11] = (sumz >> 40) & 0xFF;
-            memory[sp - 10] = (sumz >> 48) & 0xFF;
-            memory[sp - 9] = (sumz >> 56) & 0xFF; //most significant
+            memory[sp - 9] = sumz & 0xFF; //least significant
+            memory[sp - 10] = (sumz >> 8) & 0xFF;
+            memory[sp - 11] = (sumz >> 16) & 0xFF; 
+            memory[sp - 12] = (sumz >> 24) & 0xFF;
+            memory[sp - 13] = (sumz >> 32) & 0xFF; 
+            memory[sp - 14] = (sumz >> 40) & 0xFF;
+            memory[sp - 15] = (sumz >> 48) & 0xFF;
+            memory[sp - 16] = (sumz >> 56) & 0xFF; //most significant
             sp -= 8;
             pc += 1;
             break;
