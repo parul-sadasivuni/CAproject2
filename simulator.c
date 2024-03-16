@@ -795,23 +795,25 @@ int main (int argc, char** argv) {
             break;
         case 0x4f: //outi
             sp -= 4;
-            int32_t outi = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
-            // int8_t intBytes[8];
-            // for (int i = 0; i < 8; i++) {
-            //     intBytes[i] = memory[sp + 3 - i];
-            // }
-            // int outi = *((int*)intBytes);
+            // int32_t outi = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
+            int8_t intBytes[8];
+            for (int i = 0; i < 8; i++) {
+                intBytes[i] = memory[sp + 3 - i];
+            }
+            int outi = *((int*)intBytes);
             printf("%d\n", outi);
             pc += 1;
             break;
         case 0x50: //outl
             sp -= 8;
-            int8_t longBytes[8];
-            for (int i = 0; i < 8; i++) {
-                longBytes[i] = memory[sp + 7 - i];
-            }
-            int64_t outl = *((int64_t*)longBytes);
-            printf("%ld", outl);
+            int64_t outl = ((int64_t)memory[sp] << 56 | (int64_t)memory[sp + 1] << 48 | (int64_t)memory[sp + 2] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp + 4] << 24 | (int64_t)memory[sp + 5] << 16 | (int64_t)memory[sp + 6] << 8 | (int64_t)memory[sp + 7]);
+            printf("%ld\n", outl);
+            // int8_t longBytes[8];
+            // for (int i = 0; i < 8; i++) {
+            //     longBytes[i] = memory[sp + 7 - i];
+            // }
+            // int64_t outl = *((int64_t*)longBytes);
+            // printf("%ld", outl);
             pc += 1;
             break;
         case 0x51: //outf
