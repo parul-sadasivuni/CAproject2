@@ -88,14 +88,14 @@ int main (int argc, char** argv) {
         switch (currentByte) {
         case 0: //pushb value 00
             memory[sp] = memory[pc + 1];
-            printf("memory %d: %d\n", sp, memory[sp]);
+            // printf("memory %d: %d\n", sp, memory[sp]);
             sp += 1;
             pc += 2;
             break;
         case 1: {//pushs value 01
             short pushs = ((int16_t)memory[pc + 1] << 8 | (int16_t)memory[pc + 2]);
             memory[sp] = (pushs >> 8) & 0xFF;
-            memory[sp + 1] = pushs >> 0xFF;
+            memory[sp + 1] = pushs & 0xFF;
             // printf("memory %d: %d, memory %d: %d\n", sp, (int)memory[sp], sp + 1, printf);
             sp += 2;
             pc += 3;
@@ -113,15 +113,15 @@ int main (int argc, char** argv) {
             break;
         }
         case 3: {//pushl value 03
-            int64_t pushl = ((int)memory[pc + 1] << 56 & 0xFF| (int)memory[pc + 2] << 48 | (int)memory[pc + 3] << 40 | (int)memory[pc + 4] << 32 | (int)memory[pc + 5] << 16 | (int)memory[pc + 6] << 8 | (int)memory[pc + 7]);
-            memory[sp] = (pushi >> 56) & 0xFF;
-            memory[sp + 1] = (pushi >> 48) & 0xFF;
-            memory[sp + 2] = (pushi >> 40) & 0xFF;
-            memory[sp + 3] = (pushi >> 32) & 0xFF;
-            memory[sp + 4] = (pushi >> 24) & 0xFF;
-            memory[sp + 5] = (pushi >> 16) & 0xFF;
-            memory[sp + 6] = (pushi >> 8) & 0xFF;
-            memory[sp + 7] = (pushi) & 0xFF;
+            int64_t pushl = ((int64_t)memory[pc + 1] << 56 & 0xFF| (int64_t)memory[pc + 2] << 48 | (int64_t)memory[pc + 3] << 40 | (int64_t)memory[pc + 4] << 32 | (int64_t)memory[pc + 5] << 16 | (int64_t)memory[pc + 6] << 8 | (int64_t)memory[pc + 7]);
+            memory[sp] = (pushl >> 56) & 0xFF;
+            memory[sp + 1] = (pushl >> 48) & 0xFF;
+            memory[sp + 2] = (pushl >> 40) & 0xFF;
+            memory[sp + 3] = (pushl >> 32) & 0xFF;
+            memory[sp + 4] = (pushl >> 24) & 0xFF;
+            memory[sp + 5] = (pushl >> 16) & 0xFF;
+            memory[sp + 6] = (pushl >> 8) & 0xFF;
+            memory[sp + 7] = (pushl) & 0xFF;
             sp += 8;
             pc += 9;
             break;
@@ -227,13 +227,13 @@ int main (int argc, char** argv) {
             break;
         case 15: //dupi 0f
             memory[sp] = memory[sp - 4];
-            printf("memory %d: %d ", sp, memory[sp]);
+            // printf("memory %d: %d ", sp, memory[sp]);
             memory[sp + 1] = memory[sp - 3];
-            printf("memory %d: %d ", (sp + 1), memory[sp + 1]);
+            // printf("memory %d: %d ", (sp + 1), memory[sp + 1]);
             memory[sp + 2] = memory[sp - 2];
-            printf("memory %d: %d ", (sp + 2), memory[sp + 2]);
+            // printf("memory %d: %d ", (sp + 2), memory[sp + 2]);
             memory[sp + 3] = memory[sp - 1];
-            printf("memory %d: %d\n", (sp + 3), memory[sp + 3]);
+            // printf("memory %d: %d\n", (sp + 3), memory[sp + 3]);
             sp += 4;
             pc += 1;
             break;
