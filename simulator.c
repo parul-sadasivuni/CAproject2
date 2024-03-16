@@ -145,16 +145,16 @@ int main (int argc, char** argv) {
             break;
         }
         case 5: {//pushd value 05
-            double pd = ((double)memory[pc + 1] << 56 & 0xFF| (double)memory[pc + 2] << 48 | (double)memory[pc + 3] << 40 | (double)memory[pc + 4] << 32 | (double)memory[pc + 5] << 16 | (double)memory[pc + 6] << 8 | (double)memory[pc + 7]);
-            int64_t pushd = (int64_t) pd;
-            memory[sp] = (pushd >> 56) & 0xFF;
-            memory[sp + 1] = (pushd >> 48) & 0xFF;
-            memory[sp + 2] = (pushd >> 40) & 0xFF;
-            memory[sp + 3] = (pushd >> 32) & 0xFF;
-            memory[sp + 4] = (pushd >> 24) & 0xFF;
-            memory[sp + 5] = (pushd >> 16) & 0xFF;
-            memory[sp + 6] = (pushd >> 8) & 0xFF;
-            memory[sp + 7] = (pushd) & 0xFF;
+            // double pd = ((double)memory[pc + 1] << 56 & 0xFF| (double)memory[pc + 2] << 48 | (double)memory[pc + 3] << 40 | (double)memory[pc + 4] << 32 | (double)memory[pc + 5] << 16 | (double)memory[pc + 6] << 8 | (double)memory[pc + 7]);
+            // int64_t pushd = (int64_t) pd;
+            // memory[sp] = (pushd >> 56) & 0xFF;
+            // memory[sp + 1] = (pushd >> 48) & 0xFF;
+            // memory[sp + 2] = (pushd >> 40) & 0xFF;
+            // memory[sp + 3] = (pushd >> 32) & 0xFF;
+            // memory[sp + 4] = (pushd >> 24) & 0xFF;
+            // memory[sp + 5] = (pushd >> 16) & 0xFF;
+            // memory[sp + 6] = (pushd >> 8) & 0xFF;
+            // memory[sp + 7] = (pushd) & 0xFF;
             sp += 8;
             pc += 9;
             break;
