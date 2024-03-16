@@ -1,6 +1,6 @@
 .code
-	pushd 50.0
-	dupd
-	popd
-	outd
+	pushb 0x32
+	dupb
+	popb
+	outb
 	halt
