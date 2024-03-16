@@ -1,5 +1,5 @@
 .code
-	pushd -50.0
+	pushd 50.0
 	dupd
 	popd
 	outd
