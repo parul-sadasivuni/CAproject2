@@ -789,11 +789,12 @@ int main (int argc, char** argv) {
             break;
         case 0x4e: //outs
             sp -= 2;
-            int8_t shortBytes[8];
-            for (int i = 0; i < 8; i++) {
-                shortBytes[i] = memory[sp + 7 - i];
-            }
-            short outs = *((short*)shortBytes);
+            int16_t outs = ((int16_t)memory[sp] << 8 | (int16_t)memory[sp + 1]);
+            // int8_t shortBytes[8];
+            // for (int i = 0; i < 8; i++) {
+            //     shortBytes[i] = memory[sp + 7 - i];
+            // }
+            // short outs = *((short*)shortBytes);
             printf("%d\n", outs);
             pc += 1;
             break;
