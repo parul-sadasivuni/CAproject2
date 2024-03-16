@@ -437,8 +437,8 @@ int main (int argc, char** argv) {
             pc += 4;
             break;
         case 31: {//popmm address items 1f
-            sp -= items;
             items = memory[pc + 4];
+            sp -= items;
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
             if(!(address >= 0 && address <= memSize)) {
                 fprintf(stderr, "Simulation error\n");
