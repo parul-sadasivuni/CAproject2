@@ -148,12 +148,20 @@ int main (int argc, char** argv) {
             break;
         case 6: //pushbm address 06
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             memory[sp] = memory[address];
             sp += 1;
             pc += 4;
             break;
         case 7: //pushsm address 07
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             memory[sp] = memory[address];
             memory[sp + 1] = memory[address + 1]; 
             sp += 2;
@@ -161,6 +169,10 @@ int main (int argc, char** argv) {
             break;
         case 8: //pushim address 08
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             memory[sp] = memory[address];
             memory[sp + 1] = memory[address + 1];
             memory[sp + 2] = memory[address + 2];
@@ -170,6 +182,10 @@ int main (int argc, char** argv) {
             break;
         case 9: //pushlm address 09
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             memory[sp] = memory[address];
             memory[sp + 1] = memory[address + 1];
             memory[sp + 2] = memory[address + 2];
@@ -183,6 +199,10 @@ int main (int argc, char** argv) {
             break;
         case 10: //pushfm address 0a
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             memory[sp] = memory[address];
             memory[sp + 1] = memory[address + 1];
             memory[sp + 2] = memory[address + 2];
@@ -192,6 +212,10 @@ int main (int argc, char** argv) {
             break;
         case 11: {//pushdm 0b
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             memory[sp] = memory[address];
             memory[sp + 1] = memory[address + 1];
             memory[sp + 2] = memory[address + 2];
@@ -207,6 +231,10 @@ int main (int argc, char** argv) {
         case 12: {//pushmm address items 0c
             items = memory[pc + 4];
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             for(int i = 0; i < items; i++) {
                 memory[sp + i] = memory[address + i];
             }
@@ -295,12 +323,20 @@ int main (int argc, char** argv) {
             break;
         case 25: //popbm address 19
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             memory[address] = memory[sp - 1]; 
             sp -= 1;
             pc += 4;
             break;
         case 26: //popsm address 1a
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             sp -= 2;
             memory[address] = memory[sp]; 
             memory[address + 1] = memory[sp + 1]; 
@@ -309,6 +345,10 @@ int main (int argc, char** argv) {
         case 27: //popim address
             sp -= 4;
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             memory[address] = memory[sp]; 
             memory[address + 1] = memory[sp + 1];
             memory[address + 2] = memory[sp + 2];
@@ -317,6 +357,10 @@ int main (int argc, char** argv) {
             break;
         case 28: //poplm address
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             sp -= 8;
             memory[address] = memory[sp]; 
             memory[address + 1] = memory[sp + 1];
@@ -330,6 +374,10 @@ int main (int argc, char** argv) {
             break;
         case 29: //popfm address 1d
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             sp -= 4;
             memory[address] = memory[sp]; 
             memory[address + 1] = memory[sp + 1];
@@ -339,6 +387,10 @@ int main (int argc, char** argv) {
             break;
         case 30: //popdm address 1e
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             sp -= 8;
             memory[address] = memory[sp]; 
             memory[address + 1] = memory[sp + 1];
@@ -354,6 +406,10 @@ int main (int argc, char** argv) {
             sp -= items;
             items = memory[pc + 4];
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             for(int i = 0; i < items; i++) {
                 memory[address + i] = memory[sp + i];
             }
@@ -657,7 +713,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error 2\n");
+                fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
             break;
@@ -670,7 +726,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error 3\n");
+                fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
             break;
@@ -683,7 +739,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error 4\n");
+                fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
             break;
@@ -696,7 +752,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error 5\n");
+                fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
             break;
@@ -709,7 +765,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error 6\n");
+                fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
             break;
@@ -722,7 +778,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error 7\n");
+                fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
             break;
@@ -1307,6 +1363,10 @@ int main (int argc, char** argv) {
         }
         case 0x83: 
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             pc = address;
             break;
         case 0x84:
@@ -1317,6 +1377,10 @@ int main (int argc, char** argv) {
             break;
         case 0x86: //jz
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             if(memory[sp - 4] == 0) {
                 pc = address;
             }
@@ -1326,6 +1390,10 @@ int main (int argc, char** argv) {
             break;
         case 0x87: //jnz
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             if(memory[sp - 4] != 0) {
                 pc = address;
             }
@@ -1335,6 +1403,10 @@ int main (int argc, char** argv) {
             break;
         case 0x88: //jgt
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             if(memory[sp - 4] > 0) {
                 pc = address;
             }
@@ -1344,6 +1416,10 @@ int main (int argc, char** argv) {
             break;
         case 0x89: //jlt
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             if(memory[sp - 4] < 0) {
                 pc = address;
             }
@@ -1353,6 +1429,10 @@ int main (int argc, char** argv) {
             break;
         case 0x8a: //jge
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             if(memory[sp - 4] >= 0) {
                 pc = address;
             }
@@ -1362,6 +1442,10 @@ int main (int argc, char** argv) {
             break;
         case 0x8b: //jle
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             if(memory[sp - 4] <= 0) {
                 pc = address;
             }
@@ -1371,6 +1455,10 @@ int main (int argc, char** argv) {
             break;
         case 0x8c: //call
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
+            if(!(address >= 0 && address <= memSize)) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             memory[sp] = pc + 4;
             sp += 4;
             pc = address;
@@ -1383,7 +1471,7 @@ int main (int argc, char** argv) {
             halt = true;
             break;
         default: 
-            fprintf(stderr, "pc: %d, current Byte: %d, Simulation error 8\n", pc, currentByte);
+            fprintf(stderr, "Simulation error\n");
             exit(1);
             break;
         }
@@ -1391,6 +1479,9 @@ int main (int argc, char** argv) {
         //printf("pc %d, sp %d\n", pc, sp);
     }
     //TODO check which ones are unsigned (uint8_t)
-
+    if(!halt) {
+        fprintf(stderr, "Simulation error\n");
+        exit(1);
+    }
     //printf("memory[0x40000]: %d\n", memory[0x40000]);
 }
