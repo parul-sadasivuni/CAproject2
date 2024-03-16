@@ -12,6 +12,17 @@ int main (int argc, char** argv) {
     //go through instruction indexes of memory array to execute instructions, update stack pointer and pc as needed 
     //TODO errors: calls are within bounds of memory, must have halt, valid instructions, no division by 0 fprintf(stderr, "Simulation error")
 
+    //union for floats
+    union Float {
+        float flt;
+        int32_t sign;
+    };
+
+    union Double {
+        double dbl;
+        int32_t sign;
+    };
+
     //memory array with max size of 512*1024
     uint32_t memSize = 0x80000;
     int8_t memory[memSize];
@@ -68,10 +79,10 @@ int main (int argc, char** argv) {
     int8_t items;
     //iterate through memory until end of instructions
     bool halt = false;
-    uint_32 currentByte;
+    uint8_t currentByte;
     while(pc < (dataOff-instrOff) && !halt) {
-        currentByte = (uint_32) memory[pc];
-        printf("currentByte: %d ", currentByte);
+        currentByte = (uint8_t) memory[pc];
+        //printf("currentByte: %d ", currentByte);
         //switch case based on the opcode
         switch (currentByte) {
         case 0: //pushb value 00
@@ -92,7 +103,7 @@ int main (int argc, char** argv) {
             memory[sp + 3] = memory[pc + 4];
             sp += 4;
             pc += 5;
-            printf("called pushi pc: %d; ", pc);
+            //printf("called pushi pc: %d; ", pc);
             break;
         case 3: //pushl value 03
             memory[sp] = memory[pc + 1];
@@ -608,18 +619,20 @@ int main (int argc, char** argv) {
             pc += 1;
             break;
         case 0x45: {//inch
-            char ch[1];
-            scanf("%99[^\n]", input);
-            if(sscanf(input, "%c", &ch) == 1 && strlen(input) == 1) {
-                int8_t toInput = ch[0];
-                memory[sp] = toInput;
-                sp += 1;
-                pc += 1;
-            }
-            else {
-                fprintf(stderr, "Simulation error 1\n");
+            char ch;
+            if (scanf(" %c", &ch) != 1) {
+                fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
+            char remaining;
+            if (scanf("%c", &remaining) == 1 && remaining != '\n') {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
+            else {
+                int8_t byte = (int8_t)ch;
+            }
+            pc += 1;
             break;
         }
         case 0x46: //inb
@@ -702,110 +715,49 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x4c: //outch
-            //TODO figure out hwo to convert
             sp -= 1;
-            char outc = (char) memory[sp];
-            printf("%s", outc);
+            char outch = (char) memory[sp];
+            printf("%c", outch);
             pc += 1;
             break;
-        //TODO fix outs and make sure that the decimal value is outputted, and also in correct order
         case 0x4d: //outb
             sp -= 1;
             out = memory[sp];
-            printf("%d", out);
+            printf("%d\n", out);
             pc += 1;
             break;
         case 0x4e: //outs
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
             sp -= 2;
-            out = memory[sp];
-            printf("%d", out);
+            int16_t outs = ((int16_t)memory[sp] << 8 | (int16_t)memory[sp + 1]);
+            printf("%d\n", outs);
             pc += 1;
             break;
         case 0x4f: //outi
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
+            sp -= 4;
+            int32_t outi = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
+            printf("%d\n", outi);
             pc += 1;
             break;
         case 0x50: //outl
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
+            sp -= 8;
+            int64_t outl = ((int64_t)memory[sp] << 56 | (int64_t)memory[sp + 1] << 48 | (int64_t)memory[sp + 2] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp + 4] << 24 | (int64_t)memory[sp + 5] << 16 | (int64_t)memory[sp + 6] << 8 | (int64_t)memory[sp + 7]);
+            printf("%ld\n", outl);
             pc += 1;
             break;
         case 0x51: //outf
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
+            sp -= 4;
+            int32_t outf = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
+            union Float flo;
+            flo.sign = outf;
+            printf("%f\n", flo.flt);
             pc += 1;
             break;
         case 0x52: //outd
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
-            sp -= 1;
-            out = memory[sp];
-            printf("%d", out);
+            sp -= 8;
+            int64_t outd = ((int64_t)memory[sp] << 56 | (int64_t)memory[sp + 1] << 48 | (int64_t)memory[sp + 2] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp + 4] << 24 | (int64_t)memory[sp + 5] << 16 | (int64_t)memory[sp + 6] << 8 | (int64_t)memory[sp + 7]);
+            union Double dou;
+            dou.sign = outd;
+            printf("%lf\n", dou.dbl);
             pc += 1;
             break;
         case 0x53: //addb
