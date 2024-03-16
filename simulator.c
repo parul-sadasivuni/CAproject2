@@ -68,10 +68,10 @@ int main (int argc, char** argv) {
     int8_t items;
     //iterate through memory until end of instructions
     bool halt = false;
-    int currentByte;
+    uint_32 currentByte;
     while(pc < (dataOff-instrOff) && !halt) {
-        //printf("currentByte: %d ", currentByte);
-        currentByte = (int) memory[pc];
+        currentByte = (uint_32) memory[pc];
+        printf("currentByte: %d ", currentByte);
         //switch case based on the opcode
         switch (currentByte) {
         case 0: //pushb value 00
@@ -92,6 +92,7 @@ int main (int argc, char** argv) {
             memory[sp + 3] = memory[pc + 4];
             sp += 4;
             pc += 5;
+            printf("called pushi pc: %d; ", pc);
             break;
         case 3: //pushl value 03
             memory[sp] = memory[pc + 1];
@@ -616,7 +617,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error\n");
+                fprintf(stderr, "Simulation error 1\n");
                 exit(1);
             }
             break;
@@ -630,7 +631,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error\n");
+                fprintf(stderr, "Simulation error 2\n");
                 exit(1);
             }
             break;
@@ -643,7 +644,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error\n");
+                fprintf(stderr, "Simulation error 3\n");
                 exit(1);
             }
             break;
@@ -656,7 +657,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error\n");
+                fprintf(stderr, "Simulation error 4\n");
                 exit(1);
             }
             break;
@@ -669,7 +670,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error\n");
+                fprintf(stderr, "Simulation error 5\n");
                 exit(1);
             }
             break;
@@ -682,7 +683,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error\n");
+                fprintf(stderr, "Simulation error 6\n");
                 exit(1);
             }
             break;
@@ -695,7 +696,7 @@ int main (int argc, char** argv) {
                 pc += 1;
             }
             else {
-                fprintf(stderr, "Simulation error\n");
+                fprintf(stderr, "Simulation error 7\n");
                 exit(1);
             }
             break;
@@ -1412,12 +1413,13 @@ int main (int argc, char** argv) {
             halt = true;
             break;
         default: 
-            fprintf(stderr, "Simulation error\n");
+            fprintf(stderr, "pc: %d, current Byte: %d, Simulation error 8\n", pc, currentByte);
             exit(1);
             break;
         }
-    }
 
+        //printf("pc %d, sp %d\n", pc, sp);
+    }
     //TODO check which ones are unsigned (uint8_t)
 
     //printf("memory[0x40000]: %d\n", memory[0x40000]);
