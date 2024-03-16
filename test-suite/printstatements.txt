@@ -1,0 +1,9 @@
+TESTING SAVING OF MEMORY
+// for(int i = 0; i < (dataOff-instrOff); i++) {
+    //     printf("memory[%d]: %d, ", i, memory[i]);
+    // }
+    // printf("\n\n");
+    // for(int i = 0x10000; i < data; i++) {
+    //     printf("memory[%d]: %d, ", i, memory[i]);
+    // }
+    // printf("\n");

@@ -1232,3 +1232,5 @@ int main(int argc, char** argv) {
         }
     } 
 }
+
+//TODO make sure errors for invalid labels are correct
