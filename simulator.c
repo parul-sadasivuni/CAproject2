@@ -88,87 +88,56 @@ int main (int argc, char** argv) {
         switch (currentByte) {
         case 0: //pushb value 00
             memory[sp] = memory[pc + 1];
-            // printf("memory %d: %d\n", sp, memory[sp]);
             sp += 1;
             pc += 2;
             break;
-        case 1: {//pushs value 01
-            short pushs = ((int16_t)memory[pc + 1] << 8 | (int16_t)memory[pc + 2]);
-            memory[sp] = (pushs >> 8) & 0xFF;
-            memory[sp + 1] = pushs & 0xFF;
-            // printf("memory %d: %d, memory %d: %d\n", sp, (int)memory[sp], sp + 1, printf);
+        case 1: //pushs value 01
+            memory[sp] = memory[pc + 1];
+            memory[sp + 1] = memory[pc + 2];
             sp += 2;
             pc += 3;
             break;
-        }
-        case 2: {//pushi value 02
-            int pushi = ((int)memory[pc + 1] << 24 & 0xFF| (int)memory[pc + 2] << 16 | (int)memory[pc + 3] << 8 | (int)memory[pc + 4]);
-            memory[sp] = (pushi >> 24) & 0xFF;
-            memory[sp + 1] = (pushi >> 16) & 0xFF;
-            memory[sp + 2] = (pushi >> 8) & 0xFF;
-            memory[sp + 3] = (pushi) & 0xFF;
+        case 2: //pushi value 02
+            memory[sp] = memory[pc + 1];
+            memory[sp + 1] = memory[pc + 2];
+            memory[sp + 2] = memory[pc + 3];
+            memory[sp + 3] = memory[pc + 4];
             sp += 4;
             pc += 5;
             //printf("called pushi pc: %d; ", pc);
             break;
-        }
-        case 3: {//pushl value 03
-            int64_t pushl = ((int64_t)memory[pc + 1] << 56 & 0xFF| (int64_t)memory[pc + 2] << 48 | (int64_t)memory[pc + 3] << 40 | (int64_t)memory[pc + 4] << 32 | (int64_t)memory[pc + 5] << 24 | (int64_t)memory[pc + 6] << 16 | (int64_t)memory[pc + 7] << 8 | (int64_t)memory[pc + 8]);
-            memory[sp] = (pushl >> 56) & 0xFF;
-            memory[sp + 1] = (pushl >> 48) & 0xFF;
-            memory[sp + 2] = (pushl >> 40) & 0xFF;
-            memory[sp + 3] = (pushl >> 32) & 0xFF;
-            memory[sp + 4] = (pushl >> 24) & 0xFF;
-            memory[sp + 5] = (pushl >> 16) & 0xFF;
-            memory[sp + 6] = (pushl >> 8) & 0xFF;
-            memory[sp + 7] = (pushl) & 0xFF;
+        case 3: //pushl value 03
+            memory[sp] = memory[pc + 1];
+            memory[sp + 1] = memory[pc + 2];
+            memory[sp + 2] = memory[pc + 3];
+            memory[sp + 3] = memory[pc + 4];
+            memory[sp + 4] = memory[pc + 5];
+            memory[sp + 5] = memory[pc + 6];
+            memory[sp + 6] = memory[pc + 7];
+            memory[sp + 7] = memory[pc + 8];
             sp += 8;
             pc += 9;
             break;
-        }
-        case 4: {//pushf value 04
-            int32_t outf = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
-            union Float flo;
-            flo.sign = outf;
-            memory[sp] = (flo.sign >> 24) & 0xFF;
-            memory[sp + 1] = (flo.sign >> 16) & 0xFF;
-            memory[sp + 2] = (flo.sign >> 8) & 0xFF;
-            memory[sp + 3] = (flo.sign) & 0xFF;
-            // float pushf = ((float)memory[pc + 1] << 24 & 0xFF| (float)memory[pc + 2] << 16 | (float)memory[pc + 3] << 8 | (float)memory[pc + 4]);
-            // int pf = (int) pushf;
-            // memory[sp] = (pf >> 24) & 0xFF;
-            // memory[sp + 1] = (pf >> 16) & 0xFF;
-            // memory[sp + 2] = (pf >> 8) & 0xFF;
-            // memory[sp + 3] = (pf) & 0xFF;
+        case 4: //pushf value 04
+            memory[sp] = memory[pc + 1];
+            memory[sp + 1] = memory[pc + 2];
+            memory[sp + 2] = memory[pc + 3];
+            memory[sp + 3] = memory[pc + 4];
             sp += 4;
             pc += 5;
             break;
-        }
-        case 5: {//pushd value 05
-            // double pd = ((double)memory[pc + 1] << 56 & 0xFF| (double)memory[pc + 2] << 48 | (double)memory[pc + 3] << 40 | (double)memory[pc + 4] << 32 | (double)memory[pc + 5] << 16 | (double)memory[pc + 6] << 8 | (double)memory[pc + 7]);
-            // int64_t pushd = (int64_t) pd;
-            // memory[sp] = (pushd >> 56) & 0xFF;
-            // memory[sp + 1] = (pushd >> 48) & 0xFF;
-            // memory[sp + 2] = (pushd >> 40) & 0xFF;
-            // memory[sp + 3] = (pushd >> 32) & 0xFF;
-            // memory[sp + 4] = (pushd >> 24) & 0xFF;
-            // memory[sp + 5] = (pushd >> 16) & 0xFF;
-            // memory[sp + 6] = (pushd >> 8) & 0xFF;
-            // memory[sp + 7] = (pushd) & 0xFF;
-            int64_t pushd = ((int64_t)memory[pc + 1] << 56 & 0xFF| (int64_t)memory[pc + 2] << 48 | (int64_t)memory[pc + 3] << 40 | (int64_t)memory[pc + 4] << 32 | (int64_t)memory[pc + 5] << 16 | (int64_t)memory[pc + 6] << 8 | (int64_t)memory[pc + 7]);
-            //int64_t pushd = (int64_t) pd;
-            memory[sp] = (pushd >> 56) & 0xFF;
-            memory[sp + 1] = (pushd >> 48) & 0xFF;
-            memory[sp + 2] = (pushd >> 40) & 0xFF;
-            memory[sp + 3] = (pushd >> 32) & 0xFF;
-            memory[sp + 4] = (pushd >> 24) & 0xFF;
-            memory[sp + 5] = (pushd >> 16) & 0xFF;
-            memory[sp + 6] = (pushd >> 8) & 0xFF;
-            memory[sp + 7] = (pushd) & 0xFF;
+        case 5: //pushd value 05
+            memory[sp] = memory[pc + 1];
+            memory[sp + 1] = memory[pc + 2];
+            memory[sp + 2] = memory[pc + 3];
+            memory[sp + 3] = memory[pc + 4];
+            memory[sp + 4] = memory[pc + 5];
+            memory[sp + 5] = memory[pc + 6];
+            memory[sp + 6] = memory[pc + 7];
+            memory[sp + 7] = memory[pc + 8];
             sp += 8;
             pc += 9;
             break;
-        }
         case 6: //pushbm address 06
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
             if(!(address >= 0 && address <= memSize)) {
