@@ -790,21 +790,17 @@ int main (int argc, char** argv) {
         case 0x4e: //outs
             sp -= 2;
             int16_t outs = ((int16_t)memory[sp] << 8 | (int16_t)memory[sp + 1]);
-            // int8_t shortBytes[8];
-            // for (int i = 0; i < 8; i++) {
-            //     shortBytes[i] = memory[sp + 7 - i];
-            // }
-            // short outs = *((short*)shortBytes);
             printf("%d\n", outs);
             pc += 1;
             break;
         case 0x4f: //outi
             sp -= 4;
-            int8_t intBytes[8];
-            for (int i = 0; i < 8; i++) {
-                intBytes[i] = memory[sp + 3 - i];
-            }
-            int outi = *((int*)intBytes);
+            int32_t outi = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
+            // int8_t intBytes[8];
+            // for (int i = 0; i < 8; i++) {
+            //     intBytes[i] = memory[sp + 3 - i];
+            // }
+            // int outi = *((int*)intBytes);
             printf("%d\n", outi);
             pc += 1;
             break;
