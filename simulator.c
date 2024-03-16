@@ -783,7 +783,7 @@ int main (int argc, char** argv) {
             break;
         case 0x4d: //outb
             sp -= 1;
-            int8_t outb = memory[sp];
+            out = memory[sp];
             printf("%d\n", out);
             pc += 1;
             break;
