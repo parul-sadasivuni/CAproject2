@@ -1,6 +1,7 @@
 .code
-	pushb 0x32
-	dupb
-	popb
-	outb
+	pushb 8
+	convbs
+	dups
+	pops
+	outs
 	halt

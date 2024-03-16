@@ -532,31 +532,75 @@ int main (int argc, char** argv) {
             memory[sp - 9] = tmp;
             pc += 1;
             break;
-        case 38: //convbs 26
-            memory[sp - 1] = (short)memory[sp - 1];
+        case 38: {//convbs 26
+            int8_t bs = memory[sp - 1];
+            memory[sp - 1] = (bs >> 8) & 0xFF;
+            memory[sp] = bs & 0xFF;
             sp += 1;
             pc += 1;
             break;
-        case 39: //convbi 27
-            memory[sp - 1] = (int)memory[sp - 1];
+        }
+        case 39: {//convbi 27
+            int8_t bi = memory[sp - 1];
+            int bii = (int) bi & 0xFF;
+            uint32_t biiu;
+            memcpy(&biiu, &bii, sizeof(int));
+            memory[sp - 1] = (biiu >> 24) & 0xFF;
+            memory[sp] = (biiu >> 16) & 0xFF;
+            memory[sp + 1] = (biiu >> 8) & 0xFF;
+            memory[sp + 2] = (biiu) & 0xFF;
             sp += 3;
             pc += 1;
             break;
-        case 40: //convbl 28
-            memory[sp - 1] = (int64_t)memory[sp - 1];
+        }
+        case 40: {//convbl 28
+            int8_t bl = memory[sp - 1];
+            memory[sp - 1] = (bl >> 56) & 0xFF;
+            memory[sp] = (bl >> 48) & 0xFF;
+            memory[sp + 1] = (bl >> 40) & 0xFF;
+            memory[sp + 2] = (bl >> 32) & 0xFF;
+            memory[sp + 3] = (bl >> 24) & 0xFF;
+            memory[sp + 4] = (bl >> 16) & 0xFF;
+            memory[sp + 5] = (bl >> 8) & 0xFF;
+            memory[sp + 6] = (bl) & 0xFF;
             sp += 7;
             pc += 1;
             break;
-        case 41: //convbf 29
-            memory[sp - 1] = (float)memory[sp - 1];
+        }
+        case 41: {//convbf 29
+            int8_t bf = memory[sp - 1];
+            float bff = (float) bf;
+            uint32_t bffu;
+            memcpy(&bffu, &bff, sizeof(float));
+            memory[sp - 1] = (bffu >> 24) & 0xFF;
+            memory[sp] = (bffu >> 16) & 0xFF;
+            memory[sp + 1] = (bffu >> 8) & 0xFF;
+            memory[sp + 2] = (bffu) & 0xFF;
             sp += 3;
             pc += 1;
             break;
-        case 42: //convbd 2a
+        }
+        case 42: {//convbd 2a
+            int8_t bd = memory[sp - 1];
+            double bdd = (double) bd;
+            uint64_t bddu;
+            memcpy(&bddu, &bdd, sizeof(double));
+            memory[sp - 1] = (bddu >> 56) & 0xFF;
+            memory[sp] = (bddu >> 48) & 0xFF;
+            memory[sp + 1] = (bddu >> 40) & 0xFF;
+            memory[sp + 2] = (bddu >> 32) & 0xFF;
+            memory[sp + 3] = (bddu >> 24) & 0xFF;
+            memory[sp + 4] = (bddu >> 16) & 0xFF;
+            memory[sp + 5] = (bddu >> 8) & 0xFF;
+            memory[sp + 6] = (bddu) & 0xFF;
+            sp += 7;
+            pc += 1;
+            break;
             memory[sp - 1] = (double)memory[sp - 1];
             sp += 7;
             pc += 1;
             break;
+        }
         case 43: //convsb 2b
             memory[sp - 2] = (int8_t)memory[sp - 2];
             sp -= 1;
@@ -808,12 +852,6 @@ int main (int argc, char** argv) {
             sp -= 8;
             int64_t outl = ((int64_t)memory[sp] << 56 | (int64_t)memory[sp + 1] << 48 | (int64_t)memory[sp + 2] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp + 4] << 24 | (int64_t)memory[sp + 5] << 16 | (int64_t)memory[sp + 6] << 8 | (int64_t)memory[sp + 7]);
             printf("%ld\n", outl);
-            // int8_t longBytes[8];
-            // for (int i = 0; i < 8; i++) {
-            //     longBytes[i] = memory[sp + 7 - i];
-            // }
-            // int64_t outl = *((int64_t*)longBytes);
-            // printf("%ld", outl);
             pc += 1;
             break;
         case 0x51: //outf
