@@ -113,7 +113,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 3: {//pushl value 03
-            int pushi = ((int)memory[pc + 1] << 56 & 0xFF| (int)memory[pc + 2] << 48 | (int)memory[pc + 3] << 40 | (int)memory[pc + 4] << 32 | (int)memory[pc + 5] << 16 | (int)memory[pc + 6] << 8 | (int)memory[pc + 7]);
+            int64_t pushl = ((int)memory[pc + 1] << 56 & 0xFF| (int)memory[pc + 2] << 48 | (int)memory[pc + 3] << 40 | (int)memory[pc + 4] << 32 | (int)memory[pc + 5] << 16 | (int)memory[pc + 6] << 8 | (int)memory[pc + 7]);
             memory[sp] = (pushi >> 56) & 0xFF;
             memory[sp + 1] = (pushi >> 48) & 0xFF;
             memory[sp + 2] = (pushi >> 40) & 0xFF;
