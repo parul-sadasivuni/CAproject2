@@ -127,12 +127,19 @@ int main (int argc, char** argv) {
             break;
         }
         case 4: {//pushf value 04
-            float pushf = ((float)memory[pc + 1] << 24 & 0xFF| (float)memory[pc + 2] << 16 | (float)memory[pc + 3] << 8 | (float)memory[pc + 4]);
-            int pf = (int) pushf;
-            memory[sp] = (pf >> 24) & 0xFF;
-            memory[sp + 1] = (pf >> 16) & 0xFF;
-            memory[sp + 2] = (pf >> 8) & 0xFF;
-            memory[sp + 3] = (pf) & 0xFF;
+            int32_t outf = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
+            union Float flo;
+            flo.sign = outf;
+            memory[sp] = (flo.sign >> 24) & 0xFF;
+            memory[sp + 1] = (flo.sign >> 16) & 0xFF;
+            memory[sp + 2] = (flo.sign >> 8) & 0xFF;
+            memory[sp + 3] = (flo.sign) & 0xFF;
+            // float pushf = ((float)memory[pc + 1] << 24 & 0xFF| (float)memory[pc + 2] << 16 | (float)memory[pc + 3] << 8 | (float)memory[pc + 4]);
+            // int pf = (int) pushf;
+            // memory[sp] = (pf >> 24) & 0xFF;
+            // memory[sp + 1] = (pf >> 16) & 0xFF;
+            // memory[sp + 2] = (pf >> 8) & 0xFF;
+            // memory[sp + 3] = (pf) & 0xFF;
             sp += 4;
             pc += 5;
             break;
@@ -821,22 +828,18 @@ int main (int argc, char** argv) {
             break;
         case 0x51: //outf
             sp -= 4;
-            char fl[4];
-            for(int i = 0; i < 4; i++) {
-                fl[i] = memory[sp + 3 - i];
-            }
-            float outf = *((float*)fl);
-            printf("%f\n", outf);
+            int32_t outf = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
+            union Float flo;
+            flo.sign = outf;
+            printf("%f\n", flo.flt);
             pc += 1;
             break;
         case 0x52: //outd
             sp -= 8;
-            char dou[8];
-            for(int i = 0; i < 8; i++) {
-                dou[i] = memory[sp + 7 - i];
-            }
-            double outd = *((double*)dou);
-            printf("%lf\n", outd);
+            int64_t outd = ((int64_t)memory[sp] << 56 | (int64_t)memory[sp + 1] << 48 | (int64_t)memory[sp + 2] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp + 4] << 24 | (int64_t)memory[sp + 5] << 16 | (int64_t)memory[sp + 6] << 8 | (int64_t)memory[sp + 7]);
+            union Double dou;
+            dou.sign = outd;
+            printf("%lf\n", dou.dbl);
             pc += 1;
             break;
         case 0x53: //addb
