@@ -1231,32 +1231,32 @@ int main (int argc, char** argv) {
         case 0x7c: {//shftrs value
             int16_t toShift = ((int16_t)memory[sp - 2] << 8 | (int16_t)memory[sp - 1]);
             toShift = toShift >> memory[pc + 1];
-            memory[sp - 2] = toShift & 0xFF; // least significant
-            memory[sp - 1] = (toShift >> 8) & 0xFF; //most significant
+            memory[sp - 1] = toShift & 0xFF; // least significant
+            memory[sp - 2] = (toShift >> 8) & 0xFF; //most significant
             pc += 2;
             break;
         }
         case 0x7d: {//shftri valu
             int32_t toShift = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
             toShift = toShift >> memory[pc + 1]; 
-            memory[sp - 4] = toShift & 0xFF; //least significant
-            memory[sp - 3] = (toShift >> 8) & 0xFF;
-            memory[sp - 2] = (toShift >> 16) & 0xFF; 
-            memory[sp - 1] = (toShift >> 24) & 0xFF; //most significant
+            memory[sp - 1] = toShift & 0xFF; //least significant
+            memory[sp - 2] = (toShift >> 8) & 0xFF;
+            memory[sp - 3] = (toShift >> 16) & 0xFF; 
+            memory[sp - 4] = (toShift >> 24) & 0xFF; //most significant
             pc += 2;
             break;
         }
         case 0x7e: {//shftrl vlaue
             int64_t toShift1 = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
             toShift1 = toShift1 >> memory[pc + 1]; 
-            memory[sp - 8] = toShift1 & 0xFF; //least significant
-            memory[sp - 7] = (toShift1 >> 8) & 0xFF;
-            memory[sp - 6] = (toShift1 >> 16) & 0xFF; 
-            memory[sp - 5] = (toShift1 >> 24) & 0xFF;
-            memory[sp - 4] = (toShift1 >> 32) & 0xFF; 
-            memory[sp - 3] = (toShift1 >> 40) & 0xFF;
-            memory[sp - 2] = (toShift1 >> 48) & 0xFF;
-            memory[sp - 1] = (toShift1 >> 56) & 0xFF; //most significant
+            memory[sp - 1] = toShift1 & 0xFF; //least significant
+            memory[sp - 2] = (toShift1 >> 8) & 0xFF;
+            memory[sp - 3] = (toShift1 >> 16) & 0xFF; 
+            memory[sp - 4] = (toShift1 >> 24) & 0xFF;
+            memory[sp - 5] = (toShift1 >> 32) & 0xFF; 
+            memory[sp - 6] = (toShift1 >> 40) & 0xFF;
+            memory[sp - 7] = (toShift1 >> 48) & 0xFF;
+            memory[sp - 8] = (toShift1 >> 56) & 0xFF; //most significant
             pc += 2;
             break;
         }
@@ -1270,32 +1270,32 @@ int main (int argc, char** argv) {
         case 0x80: {//shftls value
             int16_t toShift3 = ((int16_t)memory[sp - 2] << 8 | (int16_t)memory[sp - 1]);
             toShift3 = toShift3 << memory[pc + 1];
-            memory[sp - 2] = toShift3 & 0xFF; // least significant
-            memory[sp - 1] = (toShift3 >> 8) & 0xFF; //most significant
+            memory[sp - 1] = toShift3 & 0xFF; // least significant
+            memory[sp - 2] = (toShift3 >> 8) & 0xFF; //most significant
             pc += 2;
             break;
         }
         case 0x81: {//shftli value
             int32_t toShift4 = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
             toShift4 = toShift4 >> memory[pc + 1]; 
-            memory[sp - 4] = toShift4 & 0xFF; //least significant
-            memory[sp - 3] = (toShift4 >> 8) & 0xFF;
-            memory[sp - 2] = (toShift4 >> 16) & 0xFF; 
-            memory[sp - 1] = (toShift4 >> 24) & 0xFF; //most significant
+            memory[sp - 1] = toShift4 & 0xFF; //least significant
+            memory[sp - 2] = (toShift4 >> 8) & 0xFF;
+            memory[sp - 3] = (toShift4 >> 16) & 0xFF; 
+            memory[sp - 4] = (toShift4 >> 24) & 0xFF; //most significant
             pc += 2;
             break;
         }
         case 0x82: {//shftll vlaue
             int64_t toShift5 = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
             toShift5 = toShift5 << memory[pc + 1]; 
-            memory[sp - 8] = toShift5 & 0xFF; //least significant
-            memory[sp - 7] = (toShift5 >> 8) & 0xFF;
-            memory[sp - 6] = (toShift5 >> 16) & 0xFF; 
-            memory[sp - 5] = (toShift5 >> 24) & 0xFF;
-            memory[sp - 4] = (toShift5 >> 32) & 0xFF; 
-            memory[sp - 3] = (toShift5 >> 40) & 0xFF;
-            memory[sp - 2] = (toShift5 >> 48) & 0xFF;
-            memory[sp - 1] = (toShift5 >> 56) & 0xFF; //most significant
+            memory[sp - 1] = toShift5 & 0xFF; //least significant
+            memory[sp - 2] = (toShift5 >> 8) & 0xFF;
+            memory[sp - 3] = (toShift5 >> 16) & 0xFF; 
+            memory[sp - 4] = (toShift5 >> 24) & 0xFF;
+            memory[sp - 5] = (toShift5 >> 32) & 0xFF; 
+            memory[sp - 6] = (toShift5 >> 40) & 0xFF;
+            memory[sp - 7] = (toShift5 >> 48) & 0xFF;
+            memory[sp - 8] = (toShift5 >> 56) & 0xFF; //most significant
             pc += 2;
             break;
         }
