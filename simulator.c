@@ -784,31 +784,84 @@ int main (int argc, char** argv) {
             break;
         }
         case 59: {//convfb 3b
-            
-            memory[sp - 4] = (int8_t)memory[sp - 4];
+            int8_t fb[4];
+            for (int i = 0; i < 4; i++) {
+                fb[i] = memory[sp - 1 - i];
+            }
+            float fbf = *((float*)fb);
+            memory[sp - 4] = (int8_t)fbf;
             sp -= 3;
             pc += 1;
             break;
         }
-        case 60: //convfs 3c
-            memory[sp - 4] = (int16_t)memory[sp - 4];
-            sp -= sp;
+        case 60: {//convfs 3c
+            int8_t fs[4];
+            for (int i = 0; i < 4; i++) {
+                fs[i] = memory[sp - 1 - i];
+            }
+            float fsf = *((float*)fs);
+            short fss = (short) fsf;
+            memory[sp - 4] = (fss >> 8 & 0xFF);
+            memory[sp - 3] = fss & 0xFF;
+            sp -= 2;
             pc += 1;
             break;
-        case 61: //convfi 3d
-            memory[sp - 4] = (int)memory[sp - 4];
+        }
+        case 61: {//convfi 3d
+            int8_t fi[4];
+            for (int i = 0; i < 4; i++) {
+                fi[i] = memory[sp - 1 - i];
+            }
+            float fif = *((float*)fi);
+            int32_t fii;
+            memcpy(&fii, &fif, sizeof(float));
+            memory[sp - 4] = (fii >> 24) & 0xFF;
+            memory[sp - 3] = (fii >> 16) & 0xFF;
+            memory[sp - 2] = (fii >> 8) & 0xFF;
+            memory[sp - 1] = (fii) & 0xFF;
             pc += 1;
             break;
-        case 62: //convfl 3e
-            memory[sp - 4] = (int64_t)memory[sp - 4];
+        }
+        case 62: {//convfl 3e
+            int8_t fl[4];
+            for (int i = 0; i < 4; i++) {
+                fl[i] = memory[sp - 1 - i];
+            }
+            float flf = *((float*)fl);
+            int64_t fll = (int64_t) fll;
+            memory[sp - 4] = (fll >> 56) & 0xFF;
+            memory[sp - 3] = (fll >> 48) & 0xFF;
+            memory[sp - 2] = (fll >> 40) & 0xFF;
+            memory[sp - 1] = (fll >> 32) & 0xFF;
+            memory[sp] = (fll >> 24) & 0xFF;
+            memory[sp + 1] = (fll >> 16) & 0xFF;
+            memory[sp + 2] = (fll >> 8) & 0xFF;
+            memory[sp + 3] = (fll) & 0xFF;
             sp += 4;
             pc += 1;
             break;
-        case 63: //convfd 3f
-            memory[sp - 4] = (double)memory[sp - 4];
+        }
+        case 63: {//convfd 3f
+            int8_t fd[4];
+            for (int i = 0; i < 4; i++) {
+                fd[i] = memory[sp - 1 - i];
+            }
+            float fdf = *((float*)fd);
+            double fdd = (double) fdf;
+            int64_t fddu;
+            memcpy(&fddu, &fdd, sizeof(double));
+            memory[sp - 4] = (fddu >> 56) & 0xFF;
+            memory[sp - 3] = (fddu >> 48) & 0xFF;
+            memory[sp - 2] = (fddu >> 40) & 0xFF;
+            memory[sp - 1] = (fddu >> 32) & 0xFF;
+            memory[sp] = (fddu >> 24) & 0xFF;
+            memory[sp + 1] = (fddu >> 16) & 0xFF;
+            memory[sp + 2] = (fddu >> 8) & 0xFF;
+            memory[sp + 3] = (fddu) & 0xFF;
             sp += 4;
             pc += 1;
             break;
+        }
         case 64: //convdb 40
             memory[sp - 8] = (int8_t)memory[sp - 8];
             sp -= 7;
