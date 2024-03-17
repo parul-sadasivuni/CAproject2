@@ -611,8 +611,8 @@ int main (int argc, char** argv) {
             break;
         }
         case 44: {//convsi 2c
-            int16_t si = ((in16_t)memory[sp - 2] << 8 | (int16_t)memory[sp - 1]);
-            int32_t sii = (int32_t) si;
+            short si = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
+            int sii = (int) si;
             memory[sp - 1] = (sii >> 24) & 0xFF;
             memory[sp] = (sii >> 16) & 0xFF;
             memory[sp + 1] = (sii >> 8) & 0xFF;
@@ -636,7 +636,7 @@ int main (int argc, char** argv) {
             pc += 1;
             break;
         }
-        case 46: //convsf 2e
+        case 46: {//convsf 2e
             short sf = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
             float sff = (float) sf;
             int32_t sffu;
@@ -648,7 +648,8 @@ int main (int argc, char** argv) {
             sp += 2;
             pc += 1;
             break;
-        case 47: //convsd 2f
+        }
+        case 47: {//convsd 2f
             short sd = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
             double sdd = (double) sd;
             int64_t sddu;
@@ -664,6 +665,7 @@ int main (int argc, char** argv) {
             sp += 2;
             pc += 1;
             break;
+        }
         case 48: //convib 30
             memory[sp - 4] = (int8_t)memory[sp - 4];
             sp -= 3;
