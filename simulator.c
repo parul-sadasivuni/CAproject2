@@ -555,7 +555,7 @@ int main (int argc, char** argv) {
         }
         case 40: {//convbl 28
             int8_t bl = memory[sp - 1];
-            int64_t bll = (int64_t) bi & 0xFF;
+            int64_t bll = (int64_t) bl & 0xFF;
             uint64_t bllu;
             memcpy(&bllu, &bll, sizeof(int64_t));
             memory[sp - 1] = (bllu >> 56) & 0xFF;
