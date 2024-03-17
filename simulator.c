@@ -616,17 +616,18 @@ int main (int argc, char** argv) {
             //int sbi = sb << 16;
             memory[sp - 2] = (sb >> 8) & 0xFF;
             memory[sp - 1] = (sb) & 0xFF;
-            memory[sp] = 0
+            memory[sp] = 0;
             memory[sp + 1] = 0;
             sp += 2;
             pc += 1;
             break;
         }
-        case 45: //convsl 2d
+        case 45: {//convsl 2d
             memory[sp - 2] = (int64_t)memory[sp - 2];
             sp += 6;
             pc += 1;
             break;
+        }
         case 46: //convsf 2e
             memory[sp - 2] = (float)memory[sp - 2];
             sp += 2;
