@@ -864,7 +864,7 @@ int main (int argc, char** argv) {
         case 64: {//convdb 40
             int8_t db[8];
             for (int i = 0; i < 8; i++) {
-                db[i] = memory[sp + 7 - i];
+                db[i] = memory[sp - 1 - i];
             }
             double dbd = *((double*)db);
             memory[sp - 8] = (int8_t)dbd;
@@ -875,7 +875,7 @@ int main (int argc, char** argv) {
         case 65: {//convds 41
             int8_t ds[8];
             for (int i = 0; i < 8; i++) {
-                ds[i] = memory[sp + 7 - i];
+                ds[i] = memory[sp - 1 - i];
             }
             double dsd = *((double*)ds);
             short dss = (short)dsd;
@@ -888,7 +888,7 @@ int main (int argc, char** argv) {
         case 66: {//convdi 42
             int8_t di[8];
             for (int i = 0; i < 8; i++) {
-                di[i] = memory[sp + 7 - i];
+                di[i] = memory[sp - 1 - i];
             }
             double did = *((double*)di);
             int dii = (int) did;
@@ -903,7 +903,7 @@ int main (int argc, char** argv) {
         case 67: {//convdl 43
             int8_t dl[8];
             for (int i = 0; i < 8; i++) {
-                dl[i] = memory[sp + 7 - i];
+                dl[i] = memory[sp - 1 - i];
             }
             double dld = *((double*)dl);
             int64_t dll = (int64_t)dld;
@@ -921,7 +921,7 @@ int main (int argc, char** argv) {
         case 68: {//convdf 44
             int8_t df[8];
             for (int i = 0; i < 8; i++) {
-                df[i] = memory[sp + 7 - i];
+                df[i] = memory[sp - 1 - i];
             }
             double dfd = *((double*)df);
             float dff = (float) dff;
