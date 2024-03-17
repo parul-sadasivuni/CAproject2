@@ -1,2 +1,7 @@
-test1: basic, to test out commands and whatnot
-sample1 and 2: from spec
+In test1.slk, I just test various instructions to make sure they were being properly translated to the slko and then executed in the assembler.
+
+I used sample1 and sample2 to make sure that my crucial functions were working and producing the correct output. 
+
+I used the convtest file to test my conversions to make sure they were working correctly.
+
+The test labels essentially made sure that my labels had correct functionality.

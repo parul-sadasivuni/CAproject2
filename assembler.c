@@ -133,7 +133,7 @@ bool checkData(char str[]) {
         // }
     }
     else if(strcmp(dat.type, "double") == 0) {
-        double foo = strtod(str, NULL);
+        double foo = atof(str);
         // if(foo >= -__DBL_MAX__ && foo <= __DBL_MAX__) {
         dat.dou = foo;
         dataOffset += 8;
