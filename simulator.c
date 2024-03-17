@@ -572,7 +572,7 @@ int main (int argc, char** argv) {
         case 41: {//convbf 29
             int8_t bf = memory[sp - 1];
             float bff = (float) bf;
-            uint32_t bffu;
+            int32_t bffu;
             memcpy(&bffu, &bff, sizeof(float));
             memory[sp - 1] = (bffu >> 24) & 0xFF;
             memory[sp] = (bffu >> 16) & 0xFF;
