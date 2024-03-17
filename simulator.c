@@ -867,37 +867,74 @@ int main (int argc, char** argv) {
                 db[i] = memory[sp + 7 - i];
             }
             double dbd = *((double*)db);
-            memory[sp - 8] = (int8_t)memory[sp - 8];
+            memory[sp - 8] = (int8_t)dbd;
             sp -= 7;
             pc += 1;
             break;
         }
         case 65: {//convds 41
-            int8_t db[8];
+            int8_t ds[8];
             for (int i = 0; i < 8; i++) {
-                db[i] = memory[sp + 7 - i];
+                ds[i] = memory[sp + 7 - i];
             }
-            double dbd = *((double*)db);
-            
-            memory[sp - 8] = (short)memory[sp - 8];
+            double dsd = *((double*)ds);
+            short dss = (short)dsd;
+            memory[sp - 8] = (dss >> 8 & 0xFF);
+            memory[sp - 7] = dss & 0xFF;
             sp -= 6;
             pc += 1;
             break;
         }
-        case 66: //convdi 42
-            memory[sp - 8] = (int)memory[sp - 8];
+        case 66: {//convdi 42
+            int8_t di[8];
+            for (int i = 0; i < 8; i++) {
+                di[i] = memory[sp + 7 - i];
+            }
+            double did = *((double*)di);
+            int dii = (int) did;
+            memory[sp - 8] = (dii >> 24) & 0xFF;
+            memory[sp - 7] = (dii >> 16) & 0xFF;
+            memory[sp - 6] = (dii >> 8) & 0xFF;
+            memory[sp - 5] = (dii) & 0xFF;
             sp -= 4;
             pc += 1;
             break;
-        case 67: //convdl 43
-            memory[sp - 8] = (int64_t)memory[sp - 8];
+        }
+        case 67: {//convdl 43
+            int8_t dl[8];
+            for (int i = 0; i < 8; i++) {
+                dl[i] = memory[sp + 7 - i];
+            }
+            double dld = *((double*)dl);
+            int64_t dll = (int64_t)dld;
+            memory[sp - 8] = (dll >> 56) & 0xFF;
+            memory[sp - 7] = (dll >> 48) & 0xFF;
+            memory[sp - 6] = (dll >> 40) & 0xFF;
+            memory[sp - 5] = (dll >> 32) & 0xFF;
+            memory[sp - 4] = (dll >> 24) & 0xFF;
+            memory[sp - 3] = (dll >> 16) & 0xFF;
+            memory[sp - 2] = (dll >> 8) & 0xFF;
+            memory[sp - 1] = (dll) & 0xFF;
             pc += 1;
             break;
-        case 68: //convdf 44
-            memory[sp - 8] = (float)memory[sp - 8];
+        }
+        case 68: {//convdf 44
+            int8_t df[8];
+            for (int i = 0; i < 8; i++) {
+                df[i] = memory[sp + 7 - i];
+            }
+            double dfd = *((double*)df);
+            float dff = (float) dff;
+            int dffu;
+            memcpy(&dffu, &dff, sizeof(float));
+            memory[sp - 8] = (dffu >> 24) & 0xFF;
+            memory[sp - 7] = (dffu >> 16) & 0xFF;
+            memory[sp - 6] = (dffu >> 8) & 0xFF;
+            memory[sp - 5] = (dffu) & 0xFF;
             sp -= 4;
             pc += 1;
             break;
+        }
         case 0x45: {//inch
             char ch;
             if (scanf(" %c", &ch) != 1) {
@@ -955,7 +992,6 @@ int main (int argc, char** argv) {
             }
             break;
         case 0x49: //inl
-            //TODO its more than 1 byte bruh :sob:
             scanf("%99[^\n]", input);
             if(sscanf(input, "%ld", &temp) == 1) {
                 memory[sp] = (int8_t) input;
