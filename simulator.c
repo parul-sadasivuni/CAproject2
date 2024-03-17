@@ -585,7 +585,7 @@ int main (int argc, char** argv) {
         case 42: {//convbd 2a
             int8_t bd = memory[sp - 1];
             double bdd = (double) bd;
-            uint64_t bddu;
+            int64_t bddu;
             memcpy(&bddu, &bdd, sizeof(double));
             memory[sp - 1] = (bddu >> 56) & 0xFF;
             memory[sp] = (bddu >> 48) & 0xFF;
