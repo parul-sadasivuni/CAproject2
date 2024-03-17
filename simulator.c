@@ -1139,7 +1139,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x57: { //addf
-            int32_t one2 = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            // int32_t one2 = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
             int8_t addf1[4];
             for (int i = 0; i < 4; i++) {
                 addf1[i] = memory[sp - 1 - i];
@@ -1735,14 +1735,18 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            memory[sp] = pc + 4;
+            pc += 4;
+            memory[sp] = (pc >> 24) & 0xFF;
+            memory[sp + 1] = (pc >> 16) & 0xFF;
+            memory[sp + 2] = (pc >> 8) & 0xFF;
+            memory[sp + 3] = (pc) & 0xFF;
             sp += 4;
             pc = address;
             break;
         case 0x8d: //return
             sp -= 4;
             int32_t ret = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
-            pc = ret;
+            pc = memory[ret];
             break;
         case 0x8e: //halt
             halt = true;
