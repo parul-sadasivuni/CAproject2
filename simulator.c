@@ -1608,7 +1608,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x80: {//shftls value
-            int16_t toShift3 = ((int16_t)memory[sp - 2] << 8 | (int16_t)memory[sp - 1]);
+            int16_t toShift3 = ((uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
             toShift3 = toShift3 << memory[pc + 1];
             memory[sp - 1] = toShift3 & 0xFF; // least significant
             memory[sp - 2] = (toShift3 >> 8) & 0xFF; //most significant
