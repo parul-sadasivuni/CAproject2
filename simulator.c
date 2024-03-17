@@ -926,7 +926,7 @@ int main (int argc, char** argv) {
             double dfd = *((double*)df);
             float dff = (float) dff;
             int dffu;
-            memcpy(&dffu, &dff, sizeof(float));
+            memcpy(&dffu, &dff, sizeof(int));
             memory[sp - 8] = (dffu >> 24) & 0xFF;
             memory[sp - 7] = (dffu >> 16) & 0xFF;
             memory[sp - 6] = (dffu >> 8) & 0xFF;
