@@ -1719,11 +1719,12 @@ int main (int argc, char** argv) {
             sp += 4;
             pc = address;
             break;
-        case 0x8d:
+        case 0x8d: //return
             sp -= 4;
-            pc = memory[sp];
+            int32_t ret = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
+            pc = ret;
             break;
-        case 0x8e:
+        case 0x8e: //halt
             halt = true;
             break;
         default: 
