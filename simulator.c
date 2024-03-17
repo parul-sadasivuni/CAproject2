@@ -1093,9 +1093,9 @@ int main (int argc, char** argv) {
         case 0x54: { //adds
             short one = ((int16_t)memory[sp - 2] << 8 | (int16_t)memory[sp - 1]);
             short two = ((int16_t)memory[sp - 4] << 8 | (int16_t)memory[sp - 3]);
-            short sum = one + two;
-            memory[sp - 4] = sum & 0xFF; // least significant
-            memory[sp - 3] = (sum >> 8) & 0xFF; //most significant
+            short sum = (short)(one + two);
+            memory[sp - 3] = sum & 0xFF; // least significant
+            memory[sp - 4] = (sum >> 8) & 0xFF; //most significant
             sp -= 2;
             pc += 1;
             break;
