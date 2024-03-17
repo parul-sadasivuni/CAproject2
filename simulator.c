@@ -727,7 +727,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 53: {//convlb 35
-            int64_t lb = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp - 5] << 24 | (int64_t)memory[sp - 4] << 16 | (int64_t)memory[sp - 3] << 8 | (int64_t)memory[sp - 1]);
+            int64_t lb = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp + 3] << 32 | (int64_t)(uint8_t)memory[sp - 5] << 24 | (int64_t)(uint8_t)memory[sp - 4] << 16 | (int64_t)(uint8_t)memory[sp - 3] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
             memory[sp - 8] = (int8_t)lb;
             sp -= 7;
             pc += 1;
@@ -1101,9 +1101,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x55: { //addi
-            int32_t on = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t on = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
 
-            int32_t tw = ((int32_t)memory[sp - 8] << 24 | (int32_t)memory[sp - 7] << 16 | (int32_t)memory[sp - 6] << 8 | (int32_t)memory[sp - 5]);
+            int32_t tw = ((uint8_t)memory[sp - 8] << 24 | (uint8_t)memory[sp - 7] << 16 | (uint8_t)memory[sp - 6] << 8 | (uint8_t)memory[sp - 5]);
 
             int32_t sum1 = on + tw;
 
@@ -1139,7 +1139,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x57: { //addf
-            // int32_t one2 = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            // int32_t one2 = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
             int8_t addf1[4];
             for (int i = 0; i < 4; i++) {
                 addf1[i] = memory[sp - 1 - i];
@@ -1200,9 +1200,9 @@ int main (int argc, char** argv) {
             pc += 1;
         }
         case 0x5b: {//subi
-            int32_t one6 = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t one6 = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
 
-            int32_t two6 = ((int32_t)memory[sp - 8] << 24 | (int32_t)memory[sp - 7] << 16 | (int32_t)memory[sp - 6] << 8 | (int32_t)memory[sp - 5]);
+            int32_t two6 = ((uint8_t)memory[sp - 8] << 24 | (uint8_t)memory[sp - 7] << 16 | (uint8_t)memory[sp - 6] << 8 | (uint8_t)memory[sp - 5]);
 
             int32_t sum6 = two6 - one6;
 
@@ -1234,9 +1234,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x5d: {//subf
-            int32_t one8 = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t one8 = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
 
-            int32_t two8 = ((int32_t)memory[sp - 8] << 24 | (int32_t)memory[sp - 7] << 16 | (int32_t)memory[sp - 6] << 8 | (int32_t)memory[sp - 5]);
+            int32_t two8 = ((uint8_t)memory[sp - 8] << 24 | (uint8_t)memory[sp - 7] << 16 | (uint8_t)memory[sp - 6] << 8 | (uint8_t)memory[sp - 5]);
 
             int32_t sum8 = two8 - one8;
 
@@ -1282,9 +1282,9 @@ int main (int argc, char** argv) {
             pc += 1;
         }
         case 0x61: {//muli
-            int32_t oneb = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t oneb = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
 
-            int32_t twob = ((int32_t)memory[sp - 8] << 24 | (int32_t)memory[sp - 7] << 16 | (int32_t)memory[sp - 6] << 8 | (int32_t)memory[sp - 5]);
+            int32_t twob = ((uint8_t)memory[sp - 8] << 24 | (uint8_t)memory[sp - 7] << 16 | (uint8_t)memory[sp - 6] << 8 | (uint8_t)memory[sp - 5]);
 
             int32_t sumb = twob * oneb;
 
@@ -1316,9 +1316,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x63: {//mulf
-            int32_t oned = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t oned = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
 
-            int32_t twod = ((int32_t)memory[sp - 8] << 24 | (int32_t)memory[sp - 7] << 16 | (int32_t)memory[sp - 6] << 8 | (int32_t)memory[sp - 5]);
+            int32_t twod = ((uint8_t)memory[sp - 8] << 24 | (uint8_t)memory[sp - 7] << 16 | (uint8_t)memory[sp - 6] << 8 | (uint8_t)memory[sp - 5]);
 
             int32_t sumd = twod * oned;
 
@@ -1364,9 +1364,9 @@ int main (int argc, char** argv) {
             pc += 1;
         }
         case 0x67: {//divi
-            int32_t oneg = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t oneg = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
 
-            int32_t twog = ((int32_t)memory[sp - 8] << 24 | (int32_t)memory[sp - 7] << 16 | (int32_t)memory[sp - 6] << 8 | (int32_t)memory[sp - 5]);
+            int32_t twog = ((uint8_t)memory[sp - 8] << 24 | (uint8_t)memory[sp - 7] << 16 | (uint8_t)memory[sp - 6] << 8 | (uint8_t)memory[sp - 5]);
 
             int32_t sumg = twog / oneg;
 
@@ -1398,9 +1398,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x69: {//divf 
-            int32_t onej = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t onej = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
 
-            int32_t twoj = ((int32_t)memory[sp - 8] << 24 | (int32_t)memory[sp - 7] << 16 | (int32_t)memory[sp - 6] << 8 | (int32_t)memory[sp - 5]);
+            int32_t twoj = ((uint8_t)memory[sp - 8] << 24 | (uint8_t)memory[sp - 7] << 16 | (uint8_t)memory[sp - 6] << 8 | (uint8_t)memory[sp - 5]);
 
             int32_t sumj = twoj / onej;
 
@@ -1567,7 +1567,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x7d: {//shftri valu
-            int32_t toShift = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t toShift = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
             toShift = toShift >> memory[pc + 1]; 
             memory[sp - 1] = toShift & 0xFF; //least significant
             memory[sp - 2] = (toShift >> 8) & 0xFF;
@@ -1606,7 +1606,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x81: {//shftli value
-            int32_t toShift4 = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t toShift4 = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
             toShift4 = toShift4 >> memory[pc + 1]; 
             memory[sp - 1] = toShift4 & 0xFF; //least significant
             memory[sp - 2] = (toShift4 >> 8) & 0xFF;
@@ -1641,7 +1641,7 @@ int main (int argc, char** argv) {
             pc += memory[pc + 1];
             break;
         case 0x85: {//jind
-            int32_t jind = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t jind = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
             pc = jind;
             break;
         }
@@ -1651,7 +1651,7 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            int32_t jz = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t jz = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
             if(jz == 0) {
                 pc = address;
             }
@@ -1665,7 +1665,7 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            int32_t jnz = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t jnz = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
             if(jnz != 0) {
                 pc = address;
             }
@@ -1679,7 +1679,7 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            int32_t jgt = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
+            int32_t jgt = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
             if(jgt > 0) {
                 pc = address;
             }
@@ -1707,7 +1707,7 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            int32_t jge = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t jge = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
             if(jge >= 0) {
                 pc = address;
             }
@@ -1721,7 +1721,7 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            int32_t jle = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            int32_t jle = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
             if(jle <= 0) {
                 pc = address;
             }
@@ -1745,7 +1745,7 @@ int main (int argc, char** argv) {
             break;
         case 0x8d: //return
             sp -= 4;
-            int32_t ret = ((int32_t)memory[sp] << 24 | (int32_t)memory[sp + 1] << 16 | (int32_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
+            int32_t ret = ((uint8_t)memory[sp] << 24 | (uint8_t)memory[sp + 1] << 16 | (uint8_t)memory[sp + 2] << 8 | (int32_t)memory[sp + 3]);
             if(!(ret >= 0 && ret <= memSize)) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
