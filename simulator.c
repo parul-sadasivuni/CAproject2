@@ -1140,15 +1140,28 @@ int main (int argc, char** argv) {
         }
         case 0x57: { //addf
             int32_t one2 = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
-
-            int32_t two2 = ((int32_t)memory[sp - 8] << 24 | (int32_t)memory[sp - 7] << 16 | (int32_t)memory[sp - 6] << 8 | (int32_t)memory[sp - 5]);
-
-            int32_t sum3 = one2 + two2;
+            int8_t addf1[4];
+            for (int i = 0; i < 4; i++) {
+                addf1[i] = memory[sp - 1 - i];
+            }
+            float af = *((float*)addf1);
             
-            memory[sp - 5] = sum3 & 0xFF; //least significant
-            memory[sp - 6] = (sum3 >> 8) & 0xFF;
-            memory[sp - 7] = (sum3 >> 16) & 0xFF; 
-            memory[sp - 8] = (sum3 >> 24) & 0xFF; //most significant
+            int8_t addf2[4];
+            for (int i = 5; i < 8; i++) {
+                addf2[i] = memory[sp - 1 - i];
+            }
+            float af2 = *((float*)addf2);
+            float sumfloat = (float) (af + af2);
+            int32_t sumfl;
+            memcpy(&sumfl, &sumfloat, sizeof(float));
+            
+            // int32_t two2 = ((int32_t)memory[sp - 8] << 24 | (int32_t)memory[sp - 7] << 16 | (int32_t)memory[sp - 6] << 8 | (int32_t)memory[sp - 5]);
+
+            // int32_t sum3 = one2 + two2;
+            memory[sp - 5] = sumfl & 0xFF; //least significant
+            memory[sp - 6] = (sumfl >> 8) & 0xFF;
+            memory[sp - 7] = (sumfl >> 16) & 0xFF; 
+            memory[sp - 8] = (sumfl >> 24) & 0xFF; //most significant
             sp -= 4;
             pc += 1;
             break;
