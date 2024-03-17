@@ -612,11 +612,11 @@ int main (int argc, char** argv) {
         }
         case 44: {//convsi 2c
             short si = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
-            int sii = (int) si;
-            memory[sp - 1] = (sii >> 24) & 0xFF;
-            memory[sp] = (sii >> 16) & 0xFF;
-            memory[sp + 1] = (sii >> 8) & 0xFF;
-            memory[sp + 2] = (sii) & 0xFF;
+            int32_t sii = (int32_t) si;
+            memory[sp - 2] = (sii >> 24) & 0xFF;
+            memory[sp - 1] = (sii >> 16) & 0xFF;
+            memory[sp] = (sii >> 8) & 0xFF;
+            memory[sp + 1] = (sii) & 0xFF;
             sp += 2;
             pc += 1;
             break;
@@ -624,14 +624,14 @@ int main (int argc, char** argv) {
         case 45: {//convsl 2d
             short sl = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
             int64_t sll = (int64_t) sl & 0xFF;
-            memory[sp - 1] = (sll >> 56) & 0xFF;
-            memory[sp] = (sll >> 48) & 0xFF;
-            memory[sp + 1] = (sll >> 40) & 0xFF;
-            memory[sp + 2] = (sll >> 32) & 0xFF;
-            memory[sp + 3] = (sll >> 24) & 0xFF;
-            memory[sp + 4] = (sll >> 16) & 0xFF;
-            memory[sp + 5] = (sll >> 8) & 0xFF;
-            memory[sp + 6] = (sll) & 0xFF;
+            memory[sp - 2] = (sll >> 56) & 0xFF;
+            memory[sp - 1] = (sll >> 48) & 0xFF;
+            memory[sp] = (sll >> 40) & 0xFF;
+            memory[sp + 1] = (sll >> 32) & 0xFF;
+            memory[sp + 2] = (sll >> 24) & 0xFF;
+            memory[sp + 3] = (sll >> 16) & 0xFF;
+            memory[sp + 4] = (sll >> 8) & 0xFF;
+            memory[sp + 5] = (sll) & 0xFF;
             sp += 6;
             pc += 1;
             break;
@@ -641,10 +641,10 @@ int main (int argc, char** argv) {
             float sff = (float) sf;
             int32_t sffu;
             memcpy(&sffu, &sff, sizeof(float));
-            memory[sp - 1] = (sffu >> 24) & 0xFF;
-            memory[sp] = (sffu >> 16) & 0xFF;
-            memory[sp + 1] = (sffu >> 8) & 0xFF;
-            memory[sp + 2] = (sffu) & 0xFF;
+            memory[sp - 2] = (sffu >> 24) & 0xFF;
+            memory[sp - 1] = (sffu >> 16) & 0xFF;
+            memory[sp] = (sffu >> 8) & 0xFF;
+            memory[sp + 1] = (sffu) & 0xFF;
             sp += 2;
             pc += 1;
             break;
@@ -654,20 +654,20 @@ int main (int argc, char** argv) {
             double sdd = (double) sd;
             int64_t sddu;
             memcpy(&sddu, &sdd, sizeof(double));
-            memory[sp - 1] = (sddu >> 56) & 0xFF;
-            memory[sp] = (sddu >> 48) & 0xFF;
-            memory[sp + 1] = (sddu >> 40) & 0xFF;
-            memory[sp + 2] = (sddu >> 32) & 0xFF;
-            memory[sp + 3] = (sddu >> 24) & 0xFF;
-            memory[sp + 4] = (sddu >> 16) & 0xFF;
-            memory[sp + 5] = (sddu >> 8) & 0xFF;
-            memory[sp + 6] = (sddu) & 0xFF;
-            sp += 2;
+            memory[sp - 2] = (sddu >> 56) & 0xFF;
+            memory[sp - 1] = (sddu >> 48) & 0xFF;
+            memory[sp] = (sddu >> 40) & 0xFF;
+            memory[sp + 1] = (sddu >> 32) & 0xFF;
+            memory[sp + 2] = (sddu >> 24) & 0xFF;
+            memory[sp + 3] = (sddu >> 16) & 0xFF;
+            memory[sp + 4] = (sddu >> 8) & 0xFF;
+            memory[sp + 5] = (sddu) & 0xFF;
+            sp += 6;
             pc += 1;
             break;
         }
         case 48: {//convib 30
-            int ib =  ((int)memory[sp - 4] << 24 | (int)memory[sp - 3] << 16| (int)memory[sp - 2] << 8 | (int)memory[sp - 1]);
+            int ib = ((int)memory[sp - 4] << 24 | (int)memory[sp - 3] << 16 | (int)memory[sp - 2] << 8 | (int)memory[sp - 1]);
             memory[sp - 4] = (int8_t)memory[sp - 4];
             sp -= 3;
             pc += 1;
