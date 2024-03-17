@@ -764,7 +764,7 @@ int main (int argc, char** argv) {
         case 58: {//convld 3a
             int64_t ld = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp + 3] << 32 | (int64_t)(uint8_t)memory[sp - 5] << 24 | (int64_t)(uint8_t)memory[sp - 4] << 16 | (int64_t)(uint8_t)memory[sp - 3] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
             double ldd = (double) ld;
-            int64_t lddu;
+            uint64_t lddu;
             memcpy(&lddu, &ldd, sizeof(double));
             memory[sp - 8] = (lddu >> 56) & 0xFF;
             memory[sp - 7] = (lddu >> 48) & 0xFF;
