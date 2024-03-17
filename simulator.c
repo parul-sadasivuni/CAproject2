@@ -611,29 +611,56 @@ int main (int argc, char** argv) {
             break;
         }
         case 44: {//convsi 2c
-            short sb = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
-            //int sbi = sb << 16;
-            memory[sp - 2] = (sb >> 8) & 0xFF;
-            memory[sp - 1] = (sb) & 0xFF;
-            memory[sp] = 0;
-            memory[sp + 1] = 0;
+            short si = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
+            int sii = (int) si;
+            memory[sp - 1] = (sii >> 24) & 0xFF;
+            memory[sp] = (sii >> 16) & 0xFF;
+            memory[sp + 1] = (sii >> 8) & 0xFF;
+            memory[sp + 2] = (sii) & 0xFF;
             sp += 2;
             pc += 1;
             break;
         }
         case 45: {//convsl 2d
-            memory[sp - 2] = (int64_t)memory[sp - 2];
+            short sl = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
+            int64_t sll = (int64_t) sl & 0xFF;
+            memory[sp - 1] = (sll >> 56) & 0xFF;
+            memory[sp] = (sll >> 48) & 0xFF;
+            memory[sp + 1] = (sll >> 40) & 0xFF;
+            memory[sp + 2] = (sll >> 32) & 0xFF;
+            memory[sp + 3] = (sll >> 24) & 0xFF;
+            memory[sp + 4] = (sll >> 16) & 0xFF;
+            memory[sp + 5] = (sll >> 8) & 0xFF;
+            memory[sp + 6] = (sll) & 0xFF;
             sp += 6;
             pc += 1;
             break;
         }
         case 46: //convsf 2e
-            memory[sp - 2] = (float)memory[sp - 2];
+            short sf = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
+            float sff = (float) sf;
+            int32_t sffu;
+            memcpy(&sffu, &sff, sizeof(float));
+            memory[sp - 1] = (sffu >> 24) & 0xFF;
+            memory[sp] = (sffu >> 16) & 0xFF;
+            memory[sp + 1] = (sffu >> 8) & 0xFF;
+            memory[sp + 2] = (sffu) & 0xFF;
             sp += 2;
             pc += 1;
             break;
         case 47: //convsd 2f
-            memory[sp - 2] = (double)memory[sp - 2];
+            short sd = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
+            double sdd = (double) sd;
+            int64_t sddu;
+            memcpy(&sddu, &sdd, sizeof(double));
+            memory[sp - 1] = (sddu >> 56) & 0xFF;
+            memory[sp] = (sddu >> 48) & 0xFF;
+            memory[sp + 1] = (sddu >> 40) & 0xFF;
+            memory[sp + 2] = (sddu >> 32) & 0xFF;
+            memory[sp + 3] = (sddu >> 24) & 0xFF;
+            memory[sp + 4] = (sddu >> 16) & 0xFF;
+            memory[sp + 5] = (sddu >> 8) & 0xFF;
+            memory[sp + 6] = (sddu) & 0xFF;
             sp += 2;
             pc += 1;
             break;
