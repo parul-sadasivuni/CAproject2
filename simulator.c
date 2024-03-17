@@ -1356,6 +1356,10 @@ int main (int argc, char** argv) {
             break;
         case 0x66: {//divs
             short onef = ((int16_t)memory[sp - 2] << 8 | (int16_t)memory[sp - 1]);
+            if(onef == 0) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             short twof = ((int16_t)memory[sp - 4] << 8 | (int16_t)memory[sp - 3]);
             short sumf = twof / onef;
             memory[sp - 4] = sumf & 0xFF; // least significant
@@ -1365,7 +1369,10 @@ int main (int argc, char** argv) {
         }
         case 0x67: {//divi
             int32_t oneg = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
-
+            if(oneg == 0) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             int32_t twog = ((uint8_t)memory[sp - 8] << 24 | (uint8_t)memory[sp - 7] << 16 | (uint8_t)memory[sp - 6] << 8 | (uint8_t)memory[sp - 5]);
 
             int32_t sumg = twog / oneg;
@@ -1380,7 +1387,10 @@ int main (int argc, char** argv) {
         }
         case 0x68: {//divl
             int64_t oneh = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
-
+            if(oneh == 0) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             int64_t twoh = ((int64_t)(uint8_t)memory[sp - 16] << 56 | (int64_t)(uint8_t)memory[sp - 15] << 48 | (int64_t)(uint8_t)memory[sp - 14] << 40 | (int64_t)(uint8_t)memory[sp - 13] << 32 | (int64_t)(uint8_t)memory[sp - 12] << 24 | (int64_t)(uint8_t)memory[sp - 11] << 16 | (int64_t)(uint8_t)memory[sp - 10] << 8 | (int64_t)(uint8_t)memory[sp - 9]);
 
             int64_t sumh = twoh / oneh;
@@ -1399,7 +1409,10 @@ int main (int argc, char** argv) {
         }
         case 0x69: {//divf 
             int32_t onej = ((uint8_t)memory[sp - 4] << 24 | (uint8_t)memory[sp - 3] << 16 | (uint8_t)memory[sp - 2] << 8 | (uint8_t)memory[sp - 1]);
-
+            if(onej == 0) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             int32_t twoj = ((uint8_t)memory[sp - 8] << 24 | (uint8_t)memory[sp - 7] << 16 | (uint8_t)memory[sp - 6] << 8 | (uint8_t)memory[sp - 5]);
 
             int32_t sumj = twoj / onej;
@@ -1414,7 +1427,10 @@ int main (int argc, char** argv) {
         }
         case 0x6a: {//divd
             int64_t onez = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
-
+            if(onez == 0) {
+                fprintf(stderr, "Simulation error\n");
+                exit(1);
+            }
             int64_t twoz = ((int64_t)(uint8_t)memory[sp - 16] << 56 | (int64_t)(uint8_t)memory[sp - 15] << 48 | (int64_t)(uint8_t)memory[sp - 14] << 40 | (int64_t)(uint8_t)memory[sp - 13] << 32 | (int64_t)(uint8_t)memory[sp - 12] << 24 | (int64_t)(uint8_t)memory[sp - 11] << 16 | (int64_t)(uint8_t)memory[sp - 10] << 8 | (int64_t)(uint8_t)memory[sp - 9]);
 
             int64_t sumz = twoz / onez;
