@@ -827,7 +827,7 @@ int main (int argc, char** argv) {
                 fl[i] = memory[sp - 1 - i];
             }
             float flf = *((float*)fl);
-            int64_t fll = (int64_t) fll;
+            int64_t fll = (int64_t) flf;
             memory[sp - 4] = (fll >> 56) & 0xFF;
             memory[sp - 3] = (fll >> 48) & 0xFF;
             memory[sp - 2] = (fll >> 40) & 0xFF;
