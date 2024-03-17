@@ -555,16 +555,16 @@ int main (int argc, char** argv) {
         case 40: {//convbl 28
             int8_t bl = memory[sp - 1];
             int64_t bll = (int64_t) bl & 0xFF;
-            uint64_t bllu;
-            memcpy(&bllu, &bll, sizeof(int64_t));
-            memory[sp - 1] = (bllu >> 56) & 0xFF;
-            memory[sp] = (bllu >> 48) & 0xFF;
-            memory[sp + 1] = (bllu >> 40) & 0xFF;
-            memory[sp + 2] = (bllu >> 32) & 0xFF;
-            memory[sp + 3] = (bllu >> 24) & 0xFF;
-            memory[sp + 4] = (bllu >> 16) & 0xFF;
-            memory[sp + 5] = (bllu >> 8) & 0xFF;
-            memory[sp + 6] = (bllu) & 0xFF;
+            // int64_t bllu;
+            // memcpy(&bllu, &bll, sizeof(int64_t));
+            memory[sp - 1] = (bll >> 56) & 0xFF;
+            memory[sp] = (bll >> 48) & 0xFF;
+            memory[sp + 1] = (bll >> 40) & 0xFF;
+            memory[sp + 2] = (bll >> 32) & 0xFF;
+            memory[sp + 3] = (bll >> 24) & 0xFF;
+            memory[sp + 4] = (bll >> 16) & 0xFF;
+            memory[sp + 5] = (bll >> 8) & 0xFF;
+            memory[sp + 6] = (bll) & 0xFF;
             sp += 7;
             pc += 1;
             break;
