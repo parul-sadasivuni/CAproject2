@@ -813,8 +813,7 @@ int main (int argc, char** argv) {
                 fi[i] = memory[sp - 1 - i];
             }
             float fif = *((float*)fi);
-            int32_t fii;
-            memcpy(&fii, &fif, sizeof(float));
+            int fii = (int) fif;
             memory[sp - 4] = (fii >> 24) & 0xFF;
             memory[sp - 3] = (fii >> 16) & 0xFF;
             memory[sp - 2] = (fii >> 8) & 0xFF;
@@ -862,16 +861,29 @@ int main (int argc, char** argv) {
             pc += 1;
             break;
         }
-        case 64: //convdb 40
+        case 64: {//convdb 40
+            int8_t db[8];
+            for (int i = 0; i < 8; i++) {
+                db[i] = memory[sp + 7 - i];
+            }
+            double dbd = *((double*)db);
             memory[sp - 8] = (int8_t)memory[sp - 8];
             sp -= 7;
             pc += 1;
             break;
-        case 65: //convds 41
+        }
+        case 65: {//convds 41
+            int8_t db[8];
+            for (int i = 0; i < 8; i++) {
+                db[i] = memory[sp + 7 - i];
+            }
+            double dbd = *((double*)db);
+            
             memory[sp - 8] = (short)memory[sp - 8];
             sp -= 6;
             pc += 1;
             break;
+        }
         case 66: //convdi 42
             memory[sp - 8] = (int)memory[sp - 8];
             sp -= 4;
