@@ -7,11 +7,6 @@
 #include <stdio.h>
 
 int main (int argc, char** argv) {
-    //iterate through the binary file byte by byte
-    //figure out which byte the data starts on, iterate through until that byte, put the data into the memory array starting at the heap
-    //go through instruction indexes of memory array to execute instructions, update stack pointer and pc as needed 
-    //TODO top of stack is most significant
-    //TODO errors: calls are within bounds of memory, must have halt, valid instructions, no division by 0 fprintf(stderr, "Simulation error")
 
     //union for floats
     union Float {
@@ -753,7 +748,6 @@ int main (int argc, char** argv) {
             pc += 1;
             break;
         }
-        //TODO 56 and 0x38 are skipped
         case 57: {//convlf 39
             int64_t lf = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp + 3] << 32 | (int64_t)(uint8_t)memory[sp - 5] << 24 | (int64_t)(uint8_t)memory[sp - 4] << 16 | (int64_t)(uint8_t)memory[sp - 3] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
             float lff = (float) lf;
@@ -1766,7 +1760,7 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            pc = memory[ret];
+            pc = ret;
             break;
         case 0x8e: //halt
             halt = true;
@@ -1779,7 +1773,6 @@ int main (int argc, char** argv) {
 
         //printf("pc %d, sp %d\n", pc, sp);
     }
-    //TODO check which ones are unsigned (uint8_t)
     if(!halt) {
         fprintf(stderr, "Simulation error\n");
         exit(1);
