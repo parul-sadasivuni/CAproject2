@@ -546,9 +546,9 @@ int main (int argc, char** argv) {
             uint32_t biiu;
             memcpy(&biiu, &bii, sizeof(int));
             memory[sp - 1] = (biiu >> 24) & 0xFF;
-            memory[sp] = 0;
-            memory[sp + 1] = 0;
-            memory[sp + 2] = 0;
+            memory[sp] = (biiu >> 16) & 0xFF;
+            memory[sp + 1] = (biiu >> 8) & 0xFF;
+            memory[sp + 2] = (biiu) & 0xFF;
             sp += 3;
             pc += 1;
             break;
