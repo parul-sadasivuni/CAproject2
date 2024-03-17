@@ -668,30 +668,64 @@ int main (int argc, char** argv) {
         }
         case 48: {//convib 30
             int ib = ((int)memory[sp - 4] << 24 | (int)memory[sp - 3] << 16 | (int)memory[sp - 2] << 8 | (int)memory[sp - 1]);
-            memory[sp - 4] = (int8_t)memory[sp - 4];
+            memory[sp - 4] = (int8_t)ib;
             sp -= 3;
             pc += 1;
             break;
         }
-        case 49: //convis 31
-            memory[sp - 4] = (int16_t)memory[sp - 4];
+        case 49: {//convis 31
+            int is = ((int)memory[sp - 4] << 24 | (int)memory[sp - 3] << 16 | (int)memory[sp - 2] << 8 | (int)memory[sp - 1]);
+            short iss = (short)is;
+            memory[sp - 4] = (iss >> 8 & 0xFF);
+            memory[sp - 3] = iss & 0xFF;
             sp -= 2;
             pc += 1;
             break;
-        case 50: //convil 32
-            memory[sp - 4] = (int64_t)memory[sp - 4];
+        }
+        case 50: {//convil 32
+            int il = ((int)memory[sp - 4] << 24 | (int)memory[sp - 3] << 16 | (int)memory[sp - 2] << 8 | (int)memory[sp - 1]);
+            int64_t ill = (int64_t) il;
+            memory[sp - 4] = (ill >> 56) & 0xFF;
+            memory[sp - 3] = (ill >> 48) & 0xFF;
+            memory[sp - 2] = (ill >> 40) & 0xFF;
+            memory[sp - 1] = (ill >> 32) & 0xFF;
+            memory[sp] = (ill >> 24) & 0xFF;
+            memory[sp + 1] = (ill >> 16) & 0xFF;
+            memory[sp + 2] = (ill >> 8) & 0xFF;
+            memory[sp + 3] = (ill) & 0xFF;
             sp += 4;
             pc += 1;
             break;
-        case 51: //convif 33
-            memory[sp - 4] = (float)memory[sp - 4];
+        }
+        case 51: {//convif 33
+            int iph = ((int)memory[sp - 4] << 24 | (int)memory[sp - 3] << 16 | (int)memory[sp - 2] << 8 | (int)memory[sp - 1]);
+            float iff = (float) iph;
+            int32_t iffu;
+            memcpy(&iffu, &iff, sizeof(float));
+            memory[sp - 4] = (iffu >> 24) & 0xFF;
+            memory[sp - 3] = (iffu >> 16) & 0xFF;
+            memory[sp - 2] = (iffu >> 8) & 0xFF;
+            memory[sp - 1] = (iffu) & 0xFF;
             pc += 1;
             break;
-        case 52: //convid 34
-            memory[sp - 4] = (double)memory[sp - 4];
+        }
+        case 52: {//convid 34
+            int id = ((int)memory[sp - 4] << 24 | (int)memory[sp - 3] << 16 | (int)memory[sp - 2] << 8 | (int)memory[sp - 1]);
+            double idd = (double) id;
+            int64_t iddu;
+            memcpy(&iddu, &idd, sizeof(double));
+            memory[sp - 4] = (iddu >> 56) & 0xFF;
+            memory[sp - 3] = (iddu >> 48) & 0xFF;
+            memory[sp - 2] = (iddu >> 40) & 0xFF;
+            memory[sp - 1] = (iddu >> 32) & 0xFF;
+            memory[sp] = (iddu >> 24) & 0xFF;
+            memory[sp + 1] = (iddu >> 16) & 0xFF;
+            memory[sp + 2] = (iddu >> 8) & 0xFF;
+            memory[sp + 3] = (iddu) & 0xFF;
             sp += 4;
             pc += 1;
             break;
+        }
         case 53: //convlb 35
             memory[sp - 8] = (int8_t)memory[sp - 8];
             sp -= 7;
