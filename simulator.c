@@ -611,8 +611,8 @@ int main (int argc, char** argv) {
             break;
         }
         case 44: {//convsi 2c
-            short si = ((short)memory[sp - 2] << 8 | (short)memory[sp - 1]);
-            int sii = (int) si;
+            int16_t si = ((in16_t)memory[sp - 2] << 8 | (int16_t)memory[sp - 1]);
+            int32_t sii = (int32_t) si;
             memory[sp - 1] = (sii >> 24) & 0xFF;
             memory[sp] = (sii >> 16) & 0xFF;
             memory[sp + 1] = (sii >> 8) & 0xFF;
