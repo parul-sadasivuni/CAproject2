@@ -542,13 +542,12 @@ int main (int argc, char** argv) {
         }
         case 39: {//convbi 27
             int8_t bi = memory[sp - 1];
-            int bii = (int) bi & 0xFF;
-            uint32_t biiu;
-            memcpy(&biiu, &bii, sizeof(int));
-            memory[sp - 1] = (biiu >> 24) & 0xFF;
-            memory[sp] = (biiu >> 16) & 0xFF;
-            memory[sp + 1] = (biiu >> 8) & 0xFF;
-            memory[sp + 2] = (biiu) & 0xFF;
+            int bii = (int) bi;
+            //uint32_t biiu = memcpy(&biiu, &bii, sizeof(int));
+            memory[sp - 1] = (bii >> 24) & 0xFF;
+            memory[sp] = (bii >> 16) & 0xFF;
+            memory[sp + 1] = (bii >> 8) & 0xFF;
+            memory[sp + 2] = (bii) & 0xFF;
             sp += 3;
             pc += 1;
             break;
