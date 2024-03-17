@@ -726,36 +726,70 @@ int main (int argc, char** argv) {
             pc += 1;
             break;
         }
-        case 53: //convlb 35
-            memory[sp - 8] = (int8_t)memory[sp - 8];
+        case 53: {//convlb 35
+            int64_t lb = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp - 5] << 24 | (int64_t)memory[sp - 4] << 16 | (int64_t)memory[sp - 3] << 8 | (int64_t)memory[sp - 1]);
+            memory[sp - 8] = (int8_t)lb;
             sp -= 7;
             pc += 1;
             break;
-        case 54: //convls 36
-            memory[sp - 8] = (int16_t)memory[sp - 8];
+        }
+        case 54: {//convls 36
+            int64_t ls = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp - 5] << 24 | (int64_t)memory[sp - 4] << 16 | (int64_t)memory[sp - 3] << 8 | (int64_t)memory[sp - 1]);
+            short lss = (short)ls;
+            memory[sp - 8] = (lss >> 8 & 0xFF);
+            memory[sp - 7] = lss & 0xFF;
             sp -= 6;
             pc += 1;
             break;
-        case 55: //convli 37
-            memory[sp - 8] = (int)memory[sp - 8];
+        }
+        case 55: {//convli 37
+            int64_t li = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp - 5] << 24 | (int64_t)memory[sp - 4] << 16 | (int64_t)memory[sp - 3] << 8 | (int64_t)memory[sp - 1]);
+            int lii = (int) li;
+            memory[sp - 8] = (lii >> 24) & 0xFF;
+            memory[sp - 7] = (lii >> 16) & 0xFF;
+            memory[sp - 6] = (lii >> 8) & 0xFF;
+            memory[sp - 5] = (lii) & 0xFF;
             sp -= 4;
             pc += 1;
             break;
+        }
         //TODO 56 and 0x38 are skipped
-        case 57: //convlf 39
-            memory[sp - 8] = (float)memory[sp - 8];
+        case 57: {//convlf 39
+            int64_t lf = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp - 5] << 24 | (int64_t)memory[sp - 4] << 16 | (int64_t)memory[sp - 3] << 8 | (int64_t)memory[sp - 1]);
+            float lff = (float) lf;
+            int32_t lffu;
+            memcpy(&lffu, &lff, sizeof(float));
+            memory[sp - 8] = (lffu >> 24) & 0xFF;
+            memory[sp - 7] = (lffu >> 16) & 0xFF;
+            memory[sp - 6] = (lffu >> 8) & 0xFF;
+            memory[sp - 5] = (lffu) & 0xFF;
             sp -= 4;
             pc += 1;
             break;
-        case 58: //convld 3a
-            memory[sp - 8] = (double)memory[sp - 8];
+        }
+        case 58: {//convld 3a
+            int64_t ld = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp - 5] << 24 | (int64_t)memory[sp - 4] << 16 | (int64_t)memory[sp - 3] << 8 | (int64_t)memory[sp - 1]);
+            double ldd = (double) ld;
+            int64_t lddu;
+            memcpy(&lddu, &ldd, sizeof(double));
+            memory[sp - 8] = (lddu >> 56) & 0xFF;
+            memory[sp - 7] = (lddu >> 48) & 0xFF;
+            memory[sp - 6] = (lddu >> 40) & 0xFF;
+            memory[sp - 5] = (lddu >> 32) & 0xFF;
+            memory[sp - 4] = (lddu >> 24) & 0xFF;
+            memory[sp - 3] = (lddu >> 16) & 0xFF;
+            memory[sp - 2] = (lddu >> 8) & 0xFF;
+            memory[sp - 1] = (lddu) & 0xFF;
             pc += 1;
             break;
-        case 59: //convfb 3b
+        }
+        case 59: {//convfb 3b
+            
             memory[sp - 4] = (int8_t)memory[sp - 4];
             sp -= 3;
             pc += 1;
             break;
+        }
         case 60: //convfs 3c
             memory[sp - 4] = (int16_t)memory[sp - 4];
             sp -= sp;
