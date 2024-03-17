@@ -1617,7 +1617,7 @@ int main (int argc, char** argv) {
             pc += 2;
             break;
         }
-        case 0x83: 
+        case 0x83: //jmp address
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
             if(!(address >= 0 && address <= memSize)) {
                 fprintf(stderr, "Simulation error\n");
@@ -1625,12 +1625,14 @@ int main (int argc, char** argv) {
             }
             pc = address;
             break;
-        case 0x84:
+        case 0x84: //jrpc offset
             pc += memory[pc + 1];
             break;
-        case 0x85:
-            pc = memory[sp - 4];
+        case 0x85: {//jind
+            int32_t jind = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            pc = jind;
             break;
+        }
         case 0x86: //jz
             address = ((uint32_t)memory[pc + 1] << 16) | ((uint32_t)memory[pc + 2] << 8) | memory[pc + 3];
             if(!(address >= 0 && address <= memSize)) {
