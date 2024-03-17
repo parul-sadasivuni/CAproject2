@@ -666,11 +666,13 @@ int main (int argc, char** argv) {
             pc += 1;
             break;
         }
-        case 48: //convib 30
+        case 48: {//convib 30
+            int ib =  ((int)memory[sp - 4] << 24 | (int)memory[sp - 3] << 16| (int)memory[sp - 2] << 8 | (int)memory[sp - 1]);
             memory[sp - 4] = (int8_t)memory[sp - 4];
             sp -= 3;
             pc += 1;
             break;
+        }
         case 49: //convis 31
             memory[sp - 4] = (int16_t)memory[sp - 4];
             sp -= 2;
