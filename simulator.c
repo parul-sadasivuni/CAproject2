@@ -727,14 +727,14 @@ int main (int argc, char** argv) {
             break;
         }
         case 53: {//convlb 35
-            int64_t lb = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp + 3] << 32 | (int64_t)(uint8_t)memory[sp - 5] << 24 | (int64_t)(uint8_t)memory[sp - 4] << 16 | (int64_t)(uint8_t)memory[sp - 3] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
+            int64_t lb = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)(uint8_t)memory[sp + 3] << 32 | (int64_t)(uint8_t)(uint8_t)memory[sp - 5] << 24 | (int64_t)(uint8_t)(uint8_t)memory[sp - 4] << 16 | (int64_t)(uint8_t)(uint8_t)memory[sp - 3] << 8 | (int64_t)(uint8_t)(uint8_t)memory[sp - 1]);
             memory[sp - 8] = (int8_t)lb;
             sp -= 7;
             pc += 1;
             break;
         }
         case 54: {//convls 36
-            int64_t ls = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp - 5] << 24 | (int64_t)memory[sp - 4] << 16 | (int64_t)memory[sp - 3] << 8 | (int64_t)memory[sp - 1]);
+            int64_t ls = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp + 3] << 32 | (int64_t)(uint8_t)memory[sp - 5] << 24 | (int64_t)(uint8_t)memory[sp - 4] << 16 | (int64_t)(uint8_t)memory[sp - 3] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
             short lss = (short)ls;
             memory[sp - 8] = (lss >> 8 & 0xFF);
             memory[sp - 7] = lss & 0xFF;
@@ -743,7 +743,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 55: {//convli 37
-            int64_t li = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp - 5] << 24 | (int64_t)memory[sp - 4] << 16 | (int64_t)memory[sp - 3] << 8 | (int64_t)memory[sp - 1]);
+            int64_t li = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp + 3] << 32 | (int64_t)(uint8_t)memory[sp - 5] << 24 | (int64_t)(uint8_t)memory[sp - 4] << 16 | (int64_t)(uint8_t)memory[sp - 3] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
             int lii = (int) li;
             memory[sp - 8] = (lii >> 24) & 0xFF;
             memory[sp - 7] = (lii >> 16) & 0xFF;
@@ -755,7 +755,7 @@ int main (int argc, char** argv) {
         }
         //TODO 56 and 0x38 are skipped
         case 57: {//convlf 39
-            int64_t lf = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp - 5] << 24 | (int64_t)memory[sp - 4] << 16 | (int64_t)memory[sp - 3] << 8 | (int64_t)memory[sp - 1]);
+            int64_t lf = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp + 3] << 32 | (int64_t)(uint8_t)memory[sp - 5] << 24 | (int64_t)(uint8_t)memory[sp - 4] << 16 | (int64_t)(uint8_t)memory[sp - 3] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
             float lff = (float) lf;
             int32_t lffu;
             memcpy(&lffu, &lff, sizeof(float));
@@ -768,7 +768,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 58: {//convld 3a
-            int64_t ld = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp - 5] << 24 | (int64_t)memory[sp - 4] << 16 | (int64_t)memory[sp - 3] << 8 | (int64_t)memory[sp - 1]);
+            int64_t ld = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp + 3] << 32 | (int64_t)(uint8_t)memory[sp - 5] << 24 | (int64_t)(uint8_t)memory[sp - 4] << 16 | (int64_t)(uint8_t)memory[sp - 3] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
             double ldd = (double) ld;
             int64_t lddu;
             memcpy(&lddu, &ldd, sizeof(double));
@@ -827,7 +827,7 @@ int main (int argc, char** argv) {
                 fl[i] = memory[sp - 1 - i];
             }
             float flf = *((float*)fl);
-            int64_t fll = (int64_t) flf;
+            int64_t fll = (int64_t)(uint8_t) flf;
             memory[sp - 4] = (fll >> 56) & 0xFF;
             memory[sp - 3] = (fll >> 48) & 0xFF;
             memory[sp - 2] = (fll >> 40) & 0xFF;
@@ -906,7 +906,7 @@ int main (int argc, char** argv) {
                 dl[i] = memory[sp - 1 - i];
             }
             double dld = *((double*)dl);
-            int64_t dll = (int64_t)dld;
+            int64_t dll = (int64_t)(uint8_t)dld;
             memory[sp - 8] = (dll >> 56) & 0xFF;
             memory[sp - 7] = (dll >> 48) & 0xFF;
             memory[sp - 6] = (dll >> 40) & 0xFF;
@@ -1061,7 +1061,7 @@ int main (int argc, char** argv) {
             break;
         case 0x50: //outl
             sp -= 8;
-            int64_t outl = ((int64_t)memory[sp] << 56 | (int64_t)memory[sp + 1] << 48 | (int64_t)memory[sp + 2] << 40 | (int64_t)memory[sp + 3] << 32 | (int64_t)memory[sp + 4] << 24 | (int64_t)memory[sp + 5] << 16 | (int64_t)memory[sp + 6] << 8 | (int64_t)memory[sp + 7]);
+            int64_t outl = ((int64_t)(uint8_t)memory[sp] << 56 | (int64_t)(uint8_t)memory[sp + 1] << 48 | (int64_t)(uint8_t)memory[sp + 2] << 40 | (int64_t)(uint8_t)memory[sp + 3] << 32 | (int64_t)(uint8_t)memory[sp + 4] << 24 | (int64_t)(uint8_t)memory[sp + 5] << 16 | (int64_t)(uint8_t)memory[sp + 6] << 8 | (int64_t)(uint8_t)memory[sp + 7]);
             printf("%ld\n", outl);
             pc += 1;
             break;
@@ -1120,9 +1120,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x56: {//addl
-            int64_t one1 = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
+            int64_t one1 = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
 
-            int64_t two1 = ((int64_t)memory[sp - 16] << 56 | (int64_t)memory[sp - 15] << 48 | (int64_t)memory[sp - 14] << 40 | (int64_t)memory[sp - 13] << 32 | (int64_t)memory[sp - 12] << 24 | (int64_t)memory[sp - 11] << 16 | (int64_t)memory[sp - 10] << 8 | (int64_t)memory[sp - 9]);
+            int64_t two1 = ((int64_t)(uint8_t)memory[sp - 16] << 56 | (int64_t)(uint8_t)memory[sp - 15] << 48 | (int64_t)(uint8_t)memory[sp - 14] << 40 | (int64_t)(uint8_t)memory[sp - 13] << 32 | (int64_t)(uint8_t)memory[sp - 12] << 24 | (int64_t)(uint8_t)memory[sp - 11] << 16 | (int64_t)(uint8_t)memory[sp - 10] << 8 | (int64_t)(uint8_t)memory[sp - 9]);
 
             int64_t sum2 = one1 + two1;
 
@@ -1167,9 +1167,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x58: { //addd
-            int64_t one3 = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
+            int64_t one3 = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
 
-            int64_t two3 = ((int64_t)memory[sp - 16] << 56 | (int64_t)memory[sp - 15] << 48 | (int64_t)memory[sp - 14] << 40 | (int64_t)memory[sp - 13] << 32 | (int64_t)memory[sp - 12] << 24 | (int64_t)memory[sp - 11] << 16 | (int64_t)memory[sp - 10] << 8 | (int64_t)memory[sp - 9]);
+            int64_t two3 = ((int64_t)(uint8_t)memory[sp - 16] << 56 | (int64_t)(uint8_t)memory[sp - 15] << 48 | (int64_t)(uint8_t)memory[sp - 14] << 40 | (int64_t)(uint8_t)memory[sp - 13] << 32 | (int64_t)(uint8_t)memory[sp - 12] << 24 | (int64_t)(uint8_t)memory[sp - 11] << 16 | (int64_t)(uint8_t)memory[sp - 10] << 8 | (int64_t)(uint8_t)memory[sp - 9]);
 
             int64_t sum4 = one3 + two3;
 
@@ -1215,9 +1215,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x5c:{ //subl
-            int64_t one7 = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
+            int64_t one7 = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
 
-            int64_t two7 = ((int64_t)memory[sp - 16] << 56 | (int64_t)memory[sp - 15] << 48 | (int64_t)memory[sp - 14] << 40 | (int64_t)memory[sp - 13] << 32 | (int64_t)memory[sp - 12] << 24 | (int64_t)memory[sp - 11] << 16 | (int64_t)memory[sp - 10] << 8 | (int64_t)memory[sp - 9]);
+            int64_t two7 = ((int64_t)(uint8_t)memory[sp - 16] << 56 | (int64_t)(uint8_t)memory[sp - 15] << 48 | (int64_t)(uint8_t)memory[sp - 14] << 40 | (int64_t)(uint8_t)memory[sp - 13] << 32 | (int64_t)(uint8_t)memory[sp - 12] << 24 | (int64_t)(uint8_t)memory[sp - 11] << 16 | (int64_t)(uint8_t)memory[sp - 10] << 8 | (int64_t)(uint8_t)memory[sp - 9]);
 
             int64_t sum7 = two7 - one7;
 
@@ -1249,9 +1249,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x5e: {//subd
-            int64_t one9 = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
+            int64_t one9 = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
 
-            int64_t two9 = ((int64_t)memory[sp - 16] << 56 | (int64_t)memory[sp - 15] << 48 | (int64_t)memory[sp - 14] << 40 | (int64_t)memory[sp - 13] << 32 | (int64_t)memory[sp - 12] << 24 | (int64_t)memory[sp - 11] << 16 | (int64_t)memory[sp - 10] << 8 | (int64_t)memory[sp - 9]);
+            int64_t two9 = ((int64_t)(uint8_t)memory[sp - 16] << 56 | (int64_t)(uint8_t)memory[sp - 15] << 48 | (int64_t)(uint8_t)memory[sp - 14] << 40 | (int64_t)(uint8_t)memory[sp - 13] << 32 | (int64_t)(uint8_t)memory[sp - 12] << 24 | (int64_t)(uint8_t)memory[sp - 11] << 16 | (int64_t)(uint8_t)memory[sp - 10] << 8 | (int64_t)(uint8_t)memory[sp - 9]);
 
             int64_t sum9 = two9 - one9;
 
@@ -1297,9 +1297,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x62: {//mull
-            int64_t onec = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
+            int64_t onec = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
 
-            int64_t twoc = ((int64_t)memory[sp - 16] << 56 | (int64_t)memory[sp - 15] << 48 | (int64_t)memory[sp - 14] << 40 | (int64_t)memory[sp - 13] << 32 | (int64_t)memory[sp - 12] << 24 | (int64_t)memory[sp - 11] << 16 | (int64_t)memory[sp - 10] << 8 | (int64_t)memory[sp - 9]);
+            int64_t twoc = ((int64_t)(uint8_t)memory[sp - 16] << 56 | (int64_t)(uint8_t)memory[sp - 15] << 48 | (int64_t)(uint8_t)memory[sp - 14] << 40 | (int64_t)(uint8_t)memory[sp - 13] << 32 | (int64_t)(uint8_t)memory[sp - 12] << 24 | (int64_t)(uint8_t)memory[sp - 11] << 16 | (int64_t)(uint8_t)memory[sp - 10] << 8 | (int64_t)(uint8_t)memory[sp - 9]);
 
             int64_t sumc = twoc * onec;
 
@@ -1331,9 +1331,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x64: {//muld
-            int64_t onee = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
+            int64_t onee = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
 
-            int64_t twoe = ((int64_t)memory[sp - 16] << 56 | (int64_t)memory[sp - 15] << 48 | (int64_t)memory[sp - 14] << 40 | (int64_t)memory[sp - 13] << 32 | (int64_t)memory[sp - 12] << 24 | (int64_t)memory[sp - 11] << 16 | (int64_t)memory[sp - 10] << 8 | (int64_t)memory[sp - 9]);
+            int64_t twoe = ((int64_t)(uint8_t)memory[sp - 16] << 56 | (int64_t)(uint8_t)memory[sp - 15] << 48 | (int64_t)(uint8_t)memory[sp - 14] << 40 | (int64_t)(uint8_t)memory[sp - 13] << 32 | (int64_t)(uint8_t)memory[sp - 12] << 24 | (int64_t)(uint8_t)memory[sp - 11] << 16 | (int64_t)(uint8_t)memory[sp - 10] << 8 | (int64_t)(uint8_t)memory[sp - 9]);
 
             int64_t sume = twoe * onee;
 
@@ -1379,9 +1379,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x68: {//divl
-            int64_t oneh = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
+            int64_t oneh = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
 
-            int64_t twoh = ((int64_t)memory[sp - 16] << 56 | (int64_t)memory[sp - 15] << 48 | (int64_t)memory[sp - 14] << 40 | (int64_t)memory[sp - 13] << 32 | (int64_t)memory[sp - 12] << 24 | (int64_t)memory[sp - 11] << 16 | (int64_t)memory[sp - 10] << 8 | (int64_t)memory[sp - 9]);
+            int64_t twoh = ((int64_t)(uint8_t)memory[sp - 16] << 56 | (int64_t)(uint8_t)memory[sp - 15] << 48 | (int64_t)(uint8_t)memory[sp - 14] << 40 | (int64_t)(uint8_t)memory[sp - 13] << 32 | (int64_t)(uint8_t)memory[sp - 12] << 24 | (int64_t)(uint8_t)memory[sp - 11] << 16 | (int64_t)(uint8_t)memory[sp - 10] << 8 | (int64_t)(uint8_t)memory[sp - 9]);
 
             int64_t sumh = twoh / oneh;
 
@@ -1413,9 +1413,9 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x6a: {//divd
-            int64_t onez = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
+            int64_t onez = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
 
-            int64_t twoz = ((int64_t)memory[sp - 16] << 56 | (int64_t)memory[sp - 15] << 48 | (int64_t)memory[sp - 14] << 40 | (int64_t)memory[sp - 13] << 32 | (int64_t)memory[sp - 12] << 24 | (int64_t)memory[sp - 11] << 16 | (int64_t)memory[sp - 10] << 8 | (int64_t)memory[sp - 9]);
+            int64_t twoz = ((int64_t)(uint8_t)memory[sp - 16] << 56 | (int64_t)(uint8_t)memory[sp - 15] << 48 | (int64_t)(uint8_t)memory[sp - 14] << 40 | (int64_t)(uint8_t)memory[sp - 13] << 32 | (int64_t)(uint8_t)memory[sp - 12] << 24 | (int64_t)(uint8_t)memory[sp - 11] << 16 | (int64_t)(uint8_t)memory[sp - 10] << 8 | (int64_t)(uint8_t)memory[sp - 9]);
 
             int64_t sumz = twoz / onez;
 
@@ -1577,7 +1577,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x7e: {//shftrl vlaue
-            int64_t toShift1 = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
+            int64_t toShift1 = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
             toShift1 = toShift1 >> memory[pc + 1]; 
             memory[sp - 1] = toShift1 & 0xFF; //least significant
             memory[sp - 2] = (toShift1 >> 8) & 0xFF;
@@ -1616,7 +1616,7 @@ int main (int argc, char** argv) {
             break;
         }
         case 0x82: {//shftll vlaue
-            int64_t toShift5 = ((int64_t)memory[sp - 8] << 56 | (int64_t)memory[sp - 7] << 48 | (int64_t)memory[sp - 6] << 40 | (int64_t)memory[sp - 5] << 32 | (int64_t)memory[sp - 4] << 24 | (int64_t)memory[sp - 3] << 16 | (int64_t)memory[sp - 2] << 8 | (int64_t)memory[sp - 1]);
+            int64_t toShift5 = ((int64_t)(uint8_t)memory[sp - 8] << 56 | (int64_t)(uint8_t)memory[sp - 7] << 48 | (int64_t)(uint8_t)memory[sp - 6] << 40 | (int64_t)(uint8_t)memory[sp - 5] << 32 | (int64_t)(uint8_t)memory[sp - 4] << 24 | (int64_t)(uint8_t)memory[sp - 3] << 16 | (int64_t)(uint8_t)memory[sp - 2] << 8 | (int64_t)(uint8_t)memory[sp - 1]);
             toShift5 = toShift5 << memory[pc + 1]; 
             memory[sp - 1] = toShift5 & 0xFF; //least significant
             memory[sp - 2] = (toShift5 >> 8) & 0xFF;
