@@ -1108,15 +1108,14 @@ int main (int argc, char** argv) {
             int32_t sum1 = on + tw;
 
             memory[sp - 8] =  (sum1 >> 24) & 0xFF; //most significant
-            printf("memory %d: %d ", (sp - 8), memory[sp - 8]);
+            // printf("memory %d: %d ", (sp - 8), memory[sp - 8]);
             memory[sp - 7] = (sum1 >> 16) & 0xFF; 
-            printf("memory %d: %d ", (sp - 7), memory[sp - 7]);
+            // printf("memory %d: %d ", (sp - 7), memory[sp - 7]);
             memory[sp - 6] = (sum1 >> 8) & 0xFF;
-            printf("memory %d: %d ", (sp - 6), memory[sp - 6]);
+            // printf("memory %d: %d ", (sp - 6), memory[sp - 6]);
             memory[sp - 5] = sum1 & 0xFF; //least significant
-            printf("memory %d: %d\n", (sp - 5), memory[sp - 5]);
+            // printf("memory %d: %d\n", (sp - 5), memory[sp - 5]);
             sp -= 4;
-
             pc += 1;
             break;
         }
