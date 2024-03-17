@@ -1639,7 +1639,8 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            if(memory[sp - 4] == 0) {
+            int32_t jz = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            if(jz == 0) {
                 pc = address;
             }
             else {
@@ -1652,7 +1653,8 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            if(memory[sp - 4] != 0) {
+            int32_t jnz = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            if(jnz != 0) {
                 pc = address;
             }
             else {
@@ -1665,7 +1667,8 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            if(memory[sp - 4] > 0) {
+            int32_t jgt = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            if(jgt > 0) {
                 pc = address;
             }
             else {
@@ -1678,7 +1681,8 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            if(memory[sp - 4] < 0) {
+            int32_t jlt = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            if(jlt < 0) {
                 pc = address;
             }
             else {
@@ -1691,7 +1695,8 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            if(memory[sp - 4] >= 0) {
+            int32_t jge = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            if(jge >= 0) {
                 pc = address;
             }
             else {
@@ -1704,7 +1709,8 @@ int main (int argc, char** argv) {
                 fprintf(stderr, "Simulation error\n");
                 exit(1);
             }
-            if(memory[sp - 4] <= 0) {
+            int32_t jle = ((int32_t)memory[sp - 4] << 24 | (int32_t)memory[sp - 3] << 16 | (int32_t)memory[sp - 2] << 8 | (int32_t)memory[sp - 1]);
+            if(jle <= 0) {
                 pc = address;
             }
             else {
