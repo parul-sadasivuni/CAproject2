@@ -1,0 +1,25 @@
+.code
+:input
+:count
+	ini
+	popim :input
+	pushi 0
+	pushi 0
+	popim :count
+	pushi 0
+:loop
+	popi
+	pushim :count
+	addi
+	dupi
+	outi
+	pushim :count
+	pushi 1
+	addi
+	dupi
+	popim :count
+	pushim :input
+	swapi
+	subi
+	jnz :loop
+	halt
